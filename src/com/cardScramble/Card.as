@@ -27,6 +27,8 @@ package com.cardScramble
 		
 		public function Card(cardType:String, cardVO:CardVO){
 			
+			_data = cardVO;
+			
 			_cardImage = new Image(_assets.getTexture(cardType));
 			addChild(_cardImage);
 			
@@ -54,6 +56,7 @@ package com.cardScramble
 				var c:Image = new Image(_assets.getTexture("connector"));
 				c.pivotY = -c.height;
 				c.name = String(i);
+				c.visible = false;
 				_connectorContainer.addChild( c );
 				
 				angle = step * i;
@@ -87,6 +90,41 @@ package com.cardScramble
 			
 			this.filter = null;
 			this.filter = BlurFilter.createDropShadow();
+		}
+		
+		public function showConnector(prevCardVO:CardVO):void{
+			
+			var vertDiff:int = prevCardVO.verticalPos - _data.verticalPos;
+			var horzDiff:int = prevCardVO.horizontalPos - _data.horizontalPos;
+			
+			var connector:Image;
+			
+			if(vertDiff == -1 && horzDiff == -1){
+				connector = _connectorContainer.getChildAt(0) as Image;
+				connector.visible = true;
+			}
+			else if (vertDiff == -1 && horzDiff == 0) {
+				
+			}
+			else if (vertDiff == -1 && horzDiff == 1){
+				
+			}
+			else if (vertDiff == 0 && horzDiff == -1){
+				
+			}
+			else if (vertDiff == 0 && horzDiff == 1){
+				
+			}
+			else if (vertDiff == 1 && horzDiff == -1){
+				
+			}
+			else if (vertDiff == 1 && horzDiff == 0){
+				
+			}
+			else if (vertDiff == 1 && horzDiff == 1){
+				
+			}
+			
 		}
 		
 		

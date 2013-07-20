@@ -45,6 +45,7 @@ package com.cardScramble
 		
 		//data
 		private static var _mousePoint:Point = new Point();
+		private var _prevCardVO:CardVO;
 		
 		public function View(){
 			super();
@@ -173,8 +174,10 @@ package com.cardScramble
 					if(card.hitTest(card.globalToLocal(_mousePoint)) && card.touchable){
 						
 						var cardVO:CardVO = _model.cardDict[card];
+						
 						card.touchable = false;
 						card.selected();
+						card.showConnector(_prevCardVO);
 						
 						_model.cardSelected.push(cardVO);
 						
@@ -182,6 +185,8 @@ package com.cardScramble
 							_model.selectionComplete();
 							_cardContainer.flatten();
 						}
+						
+						_prevCardVO = cardVO;
 					}	
 				}
 				
