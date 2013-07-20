@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:269528eef76a135e4e6f021ed0ff17c1$ -->
+<TextureAtlas imagePath="2x_Diamonds.png">
+    <SubTexture name="d10" x="1059" y="2" width="149" height="212"/>
+    <SubTexture name="d2" x="908" y="2" width="149" height="212"/>
+    <SubTexture name="d3" x="1810" y="2" width="148" height="212"/>
+    <SubTexture name="d4" x="1660" y="2" width="148" height="212"/>
+    <SubTexture name="d5" x="757" y="2" width="149" height="212"/>
+    <SubTexture name="d6" x="606" y="2" width="149" height="212"/>
+    <SubTexture name="d7" x="455" y="2" width="149" height="212"/>
+    <SubTexture name="d8" x="1510" y="2" width="148" height="212"/>
+    <SubTexture name="d9" x="1360" y="2" width="148" height="212"/>
+    <SubTexture name="da" x="304" y="2" width="149" height="212"/>
+    <SubTexture name="dj" x="1210" y="2" width="148" height="212"/>
+    <SubTexture name="dk" x="153" y="2" width="149" height="212"/>
+    <SubTexture name="dq" x="2" y="2" width="149" height="212"/>
+</TextureAtlas>
