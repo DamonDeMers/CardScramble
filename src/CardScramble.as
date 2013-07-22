@@ -2,8 +2,8 @@ package
 {
 	import com.abacus.assetManager.AssetManager;
 	import com.abacus.common.Global;
-	import com.cardScramble.Model;
-	import com.cardScramble.View;
+	import com.cardScramble.data.Model;
+	import com.cardScramble.view.View;
 	
 	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;

@@ -8,7 +8,7 @@ package com.cardScramble.utils
 		private static var _instance:HandEvaluator = new HandEvaluator();
 		
 		private var _cardsSelected:Vector.<CardVO>;
-		private var _handCheckFunctions:Array = [pair, twoPair, threeOfAKind, straight, flush, fullHouse, fourOfAKind, straightFlush, royalFlush];
+		private const _handCheckFunctions:Array = [pair, twoPair, threeOfAKind, straight, flush, fullHouse, fourOfAKind, straightFlush, royalFlush];
 		private var _hands:Vector.<HandVO> = new Vector.<HandVO>;
 		private var _winningHand:HandVO;
 		

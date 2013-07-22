@@ -1,4 +1,4 @@
-package com.cardScramble
+package com.cardScramble.data
 {
 	import com.cardScramble.data.CardVO;
 	import com.cardScramble.data.HandVO;
@@ -6,6 +6,7 @@ package com.cardScramble
 	import com.cardScramble.utils.HandEvaluator;
 	import com.cardScramble.utils.HandLookup;
 	import com.cardScramble.utils.ScoreTable;
+	import com.greensock.TweenLite;
 	
 	import flash.events.TimerEvent;
 	import flash.utils.Dictionary;
@@ -16,13 +17,17 @@ package com.cardScramble
 	public class Model extends EventDispatcher
 	{
 		//modes (for testing) 0 = same hand, 1 = new hand after each play
-		public static const MODE:int = 0;
+		public const MODE:int = 1;
 		
 		//event types
 		public static const UPDATE:String = "update";
+		
+		public static const ROUND_COMPLETE:String = "roundComplete";
+
 		public static const TIMER_UPDATE:String = "timerUpdate";
 		public static const TIMER_COMPLETE:String = "timerComplete";
-		public static const SCORE_CHANGE:String = "scoreChange";
+		
+		public static const UPDATE_SCORE:String = "updateScore";
 		
 		public const NUM_CARDS_HORIZONTAL:Number = 5;
 		public const NUM_CARDS_VERTICAL:Number = 3;
@@ -42,9 +47,11 @@ package com.cardScramble
 		//data
 		private var _winningHand:HandVO;
 		private var _score:int = 0;
+		private var _tweenObj:Object = new Object;
 		
 		//timers
 		private var _countdownTimer:Timer = new Timer(1000, 60);
+		
 		
 		
 		public function Model(){
@@ -56,6 +63,7 @@ package com.cardScramble
 		}
 		
 		
+		
 		//================ PUBLIC METHODS =================//
 
 		public function selectionComplete():void{
@@ -64,15 +72,29 @@ package com.cardScramble
 			_winningHand = _handEvaluator.evaluate(_cardsSelected);
 
 			var handScoreValue:int = ScoreTable.handIntToScoreValue(_winningHand.hand);
+			_tweenObj.score = _score;
 			_score += handScoreValue;
 			
-			dispatchEventWith(UPDATE, true, {type:SCORE_CHANGE, score:handScoreValue, hand:HandLookup.handToString(_winningHand.hand)});
+			TweenLite.to(_tweenObj, 1, {delay:2, score:_score, onUpdate:onScoreUpdate});
+			
+			dispatchEventWith(UPDATE, true, {type:ROUND_COMPLETE, score:handScoreValue, hand:HandLookup.handToString(_winningHand.hand), handInt:_winningHand.hand});
 		}
 		
 		public function abortSelection():void{
 			
 			_cardsSelected.length = 0;
 		}
+		
+		
+		
+		
+		//================ PRIVATE METHODS =================//
+		
+		private function onScoreUpdate():void{
+			
+			dispatchEventWith(UPDATE, true, {type:UPDATE_SCORE, score:int(_tweenObj.score)});
+		}
+		
 		
 		
 		
@@ -85,6 +107,7 @@ package com.cardScramble
 		private function onCountdownTimerComplete(e:TimerEvent):void{
 			dispatchEventWith(UPDATE, true, {type:TIMER_COMPLETE});
 		}
+		
 		
 		
 		

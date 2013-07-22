@@ -20,7 +20,7 @@ package com.cardScramble.utils
 			
 			switch(handInt){
 				case -1:
-				hand = "No Valid Hand"
+				hand = "None"
 					break;
 				case 1:
 				hand = "Pair";

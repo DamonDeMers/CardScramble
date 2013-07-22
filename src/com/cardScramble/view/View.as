@@ -1,8 +1,8 @@
-package com.cardScramble
+package com.cardScramble.view
 {
 	import com.abacus.assetManager.AssetManager;
 	import com.cardScramble.data.CardVO;
-	import com.greensock.TweenMax;
+	import com.cardScramble.data.Model;
 	
 	import flash.geom.Point;
 	
@@ -15,18 +15,18 @@ package com.cardScramble
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.textures.Texture;
-	import starling.utils.HAlign;
 	
 	public class View extends Sprite
 	{
 		
-		[Embed(source="../../assets/fonts/JandaManateeSolid.fnt", mimeType="application/octet-stream")]
+		[Embed(source="../../../assets/fonts/JandaManateeSolid.fnt", mimeType="application/octet-stream")]
 		public static const FontXml:Class;
 		
-		[Embed(source = "../../assets/fonts/JandaManateeSolid.png")]
+		[Embed(source = "../../../assets/fonts/JandaManateeSolid.png")]
 		public static const FontTexture:Class;	
 		
-		//assets
+		
+		//singletons
 		private var _assets:AssetManager = AssetManager.getInstance();
 		
 		//bg
@@ -37,15 +37,16 @@ package com.cardScramble
 		
 		//assets
 		private var _cardContainer:Sprite = new Sprite();
+		private var _rewardSequencer:RewardSequencer;
 		
 		//text
 		private var _timerText:TextField;
 		private var _scoreText:TextField;
-		private var _messageText:TextField;
 		
 		//data
 		private static var _mousePoint:Point = new Point();
-		private var _prevCardVO:CardVO;
+		private var _prevCard:Card;
+		
 		
 		public function View(){
 			super();
@@ -66,8 +67,8 @@ package com.cardScramble
 			newHand();
 			
 			//cards
-			_cardContainer.x = 197;
-			_cardContainer.y = 182;
+			_cardContainer.x = 180;
+			_cardContainer.y = 168;
 			addChild(_cardContainer);
 			
 			//setup text
@@ -93,15 +94,9 @@ package com.cardScramble
 			_scoreText.touchable = false;
 			addChild(_scoreText);
 			
-			//message
-			_messageText = new TextField(300, 50, "Message", "JandaManateeSolid", 30, 0xFFFFFF);
-			_messageText.fontName = "JandaManateeSolid";
-			_messageText.hAlign = HAlign.CENTER;
-			_messageText.x = 150;
-			_messageText.y = 250;
-			_messageText.alpha = 0;
-			_messageText.touchable = false;
-			addChild(_messageText);
+			//reward sequencer
+			_rewardSequencer = new RewardSequencer();
+			addChild(_rewardSequencer);
 		}
 		
 		private function newHand():void{
@@ -114,6 +109,7 @@ package com.cardScramble
 			var cardNameCopy:Array = _model.cardNames.slice(0, _model.cardNames.length-1);
 			var xVal:Number = 0;
 			var yVal:Number = 0;
+			var revealDelay:Number = 0;
 			
 			for (var i:int = 0; i < _model.NUM_CARDS_VERTICAL; i++) {
 				
@@ -133,22 +129,35 @@ package com.cardScramble
 					
 					card.x = xVal;
 					card.y = yVal;
-					card.scaleX = card.scaleY = 0.5;
-					
-					_cardContainer.addChild(card);
+			
+					_cardContainer.addChild(card);		
 					cardNameCopy.splice(ranNum, 1);
 					
-					xVal += card.cardImage.width/2 + 10;
+					xVal += card.cardImage.width + 20;
+					
+					card.reveal(revealDelay);
+					revealDelay += 0.1;
 				}
 				
 				xVal = 0;
-				yVal += card.cardImage.height/2 + 15;
+				yVal += card.cardImage.height + 25;
 			}
+		}
+		
+		private function resetHand():void{
+			
+			var len:int = _cardContainer.numChildren;
+			for (var i:int = 0; i < len; i++) {
+				var card:Card = _cardContainer.getChildAt(i) as Card;
+				card.unselected();
+			}
+			
 		}
 		
 		private function initListeners():void{
 			_cardContainer.addEventListener(TouchEvent.TOUCH, onCardTouch);
 			_model.addEventListener(Model.UPDATE, onModelUpdate);
+			_rewardSequencer.addEventListener(RewardSequencer.SEQUENCE_COMPLETE, onSequenceComplete);
 		}
 
 		
@@ -171,25 +180,29 @@ package com.cardScramble
 					
 					var card:Card = _cardContainer.getChildAt(j) as Card;
 					
-					if(card.hitTest(card.globalToLocal(_mousePoint)) && card.touchable){
+					if(card.cardImage.hitTest(card.globalToLocal(_mousePoint)) && card.touchable){
 						
 						var cardVO:CardVO = _model.cardDict[card];
 						
 						card.touchable = false;
 						card.selected();
-						card.showConnector(_prevCardVO);
 						
 						_model.cardSelected.push(cardVO);
 						
-						if(_model.cardSelected.length == 5){
-							_model.selectionComplete();
-							_cardContainer.flatten();
+						if(_model.cardSelected.length > 1){
+							
+							_prevCard.showConnector(cardVO);
+							_cardContainer.setChildIndex(card, _cardContainer.numChildren-1);
+							
+							if(_model.cardSelected.length == 5){
+								
+								_model.selectionComplete();
+							}
 						}
 						
-						_prevCardVO = cardVO;
+						_prevCard = card;
 					}	
 				}
-				
 			}
 			
 			if(touchEnded){
@@ -202,11 +215,8 @@ package com.cardScramble
 				}
 				
 				_model.abortSelection();
-				_cardContainer.unflatten();
 			}
-			
 		}	
-		
 		
 		
 		private function onModelUpdate(e:Event):void{
@@ -221,15 +231,23 @@ package com.cardScramble
 					
 					break;
 				
-				case Model.SCORE_CHANGE:
-					_messageText.text = String(e.data.hand + " +" + e.data.score);
-					_scoreText.text = String("Score: " + _model.score);
-					TweenMax.to(_messageText, 0.5, {alpha:1, scaleX:2, scaleY:2, yoyo:true, repeat:1});
+				case Model.ROUND_COMPLETE:
+					_cardContainer.removeEventListener(TouchEvent.TOUCH, onCardTouch);
+					_rewardSequencer.createSequence(e.data, _mousePoint);
+					break;
+				
+				case Model.UPDATE_SCORE:
+					_scoreText.text = String("Score: " + e.data.score);
 					break;
 				
 			}	
 		}
 		
+		private function onSequenceComplete(e:Event):void{
+			
+			_model.MODE == 1 ? newHand() : resetHand();
+			_cardContainer.addEventListener(TouchEvent.TOUCH, onCardTouch);
+		}
 		
 		
 	}
