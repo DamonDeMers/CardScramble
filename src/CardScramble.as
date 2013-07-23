@@ -3,13 +3,11 @@ package
 	import com.abacus.assetManager.AssetManager;
 	import com.abacus.common.Global;
 	import com.cardScramble.data.Model;
+	import com.cardScramble.view.EmbeddedAssets;
 	import com.cardScramble.view.View;
 	
-	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.filesystem.File;
 	import flash.system.Capabilities;
 	
 	import starling.core.Starling;
@@ -22,6 +20,20 @@ package
 		
 		[Embed(source = "assets/images/bg.png")]
 		private static var Background:Class;
+		
+		/*
+		[Embed(source="assets/images/Assets.xml", mimeType="application/octet-stream")]
+		public static const AssetsXml:Class;
+		
+		[Embed(source = "assets/images/Assets.png")]
+		public static const AssetsTexture:Class;
+		
+		[Embed(source="assets/images/Cards.xml", mimeType="application/octet-stream")]
+		public static const CardsXml:Class;
+		
+		[Embed(source = "assets/images/Cards.png")]
+		public static const CardsTexture:Class;
+		*/
 		
 		private var _background:Bitmap;
 		
@@ -46,12 +58,11 @@ package
 			Starling.multitouchEnabled = true; 
 			Starling.handleLostContext = !iOS;  
 
-			var appDir:File = File.applicationDirectory;
+			//var appDir:File = File.applicationDirectory;
 			_assets.verbose = Capabilities.isDebugger;
 			_assets.enqueue(
-				appDir.resolvePath("assets/images/")
+				EmbeddedAssets
 			);
-			
 			
 			_background = new Background();
 			_background.smoothing = true;
@@ -64,12 +75,6 @@ package
 			_mStarling.showStats = true;
 			
 			_mStarling.addEventListener(starling.events.Event.ROOT_CREATED, onStarlingRootCreated);
-			
-			NativeApplication.nativeApplication.addEventListener(
-				flash.events.Event.ACTIVATE, function (e:*):void { _mStarling.start(); });
-			
-			NativeApplication.nativeApplication.addEventListener(
-				flash.events.Event.DEACTIVATE, function (e:*):void { _mStarling.stop(); });
 		}
 		
 		
