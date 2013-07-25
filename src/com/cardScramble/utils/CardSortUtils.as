@@ -1,7 +1,7 @@
 package com.cardScramble.utils
 {
-	import com.cardScramble.data.CardVO;
-	import com.cardScramble.data.HandVO;
+	import cardScramble.scenes.game.CardVO;
+	import cardScramble.scenes.game.HandVO;
 
 	public class CardSortUtils
 	{

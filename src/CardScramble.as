@@ -2,9 +2,9 @@ package
 {
 	import com.abacus.assetManager.AssetManager;
 	import com.abacus.common.Global;
-	import com.cardScramble.data.Model;
-	import com.cardScramble.view.EmbeddedAssets;
-	import com.cardScramble.view.View;
+	import com.cardScramble.EmbeddedAssets;
+	import com.cardScramble.core.CardScrambleModel;
+	import com.cardScramble.core.CardScrambleShell;
 	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -21,23 +21,10 @@ package
 		[Embed(source = "assets/images/bg.png")]
 		private static var Background:Class;
 		
-		/*
-		[Embed(source="assets/images/Assets.xml", mimeType="application/octet-stream")]
-		public static const AssetsXml:Class;
-		
-		[Embed(source = "assets/images/Assets.png")]
-		public static const AssetsTexture:Class;
-		
-		[Embed(source="assets/images/Cards.xml", mimeType="application/octet-stream")]
-		public static const CardsXml:Class;
-		
-		[Embed(source = "assets/images/Cards.png")]
-		public static const CardsTexture:Class;
-		*/
-		
+		//bg
 		private var _background:Bitmap;
 		
-		//starlig
+		//starling
 		private var _mStarling:Starling;
 		
 		//assets
@@ -47,8 +34,8 @@ package
 		private var _global:Global = Global.getInstance();
 		private var _debug:Boolean;
 		
-		private var _view:View;
-		private var _model:Model = new Model();
+		private var _shell:CardScrambleShell;
+		private var _model:CardScrambleModel = CardScrambleModel.getInstance();
 		
 		
 		public function CardScramble() {
@@ -69,7 +56,7 @@ package
 			addChild(_background);
 			
 			// launch Starling
-			_mStarling = new Starling(View, stage);
+			_mStarling = new Starling(CardScrambleShell, stage);
 			_mStarling.simulateMultitouch  = false;
 			_mStarling.enableErrorChecking = false;
 			_mStarling.showStats = true;
@@ -80,7 +67,7 @@ package
 		
 		private function onStarlingRootCreated(e:starling.events.Event):void{
 			
-			_view = _mStarling.root as View;
+			_shell = _mStarling.root as CardScrambleShell;
 			_assets.loadQueue(onAssetsProgress);
 		}
 		
@@ -101,7 +88,8 @@ package
 			
 			removeChild(_background);
 			
-			_view.init(_model, bgTexture);
+			_shell.init(_model, bgTexture);
+			_model.init();
 			_mStarling.start();
 		}
 		
