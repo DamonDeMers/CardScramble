@@ -4,10 +4,14 @@ package com.cardScramble.scenes.game
 	import com.abacus.core.ISceneData;
 	import com.abacus.scenes.game.Game;
 	import com.cardScramble.utils.StringUtils;
+	import com.cardScramble.utils.VectorUtils;
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
 	
 	import flash.geom.Point;
 	import flash.media.SoundMixer;
 	import flash.media.SoundTransform;
+	import flash.utils.getDefinitionByName;
 	
 	import cardScramble.scenes.game.CardVO;
 	
@@ -24,7 +28,6 @@ package com.cardScramble.scenes.game
 	
 	public class CardScrambleGame extends Game
 	{
-		
 		[Embed(source="../../../../assets/fonts/JandaManateeSolid.fnt", mimeType="application/octet-stream")]
 		public static const FontXml:Class;
 		
@@ -43,6 +46,7 @@ package com.cardScramble.scenes.game
 		//assets
 		private var _cardContainer:Sprite = new Sprite();
 		private var _rewardSequencer:RewardSequencer;
+		private var _powerUps:PowerUps;
 		private var _soundIconsContainer:Sprite;
 		private var _musicIcon:Image;
 		private var _soundFxIcon:Image;
@@ -93,6 +97,12 @@ package com.cardScramble.scenes.game
 			_scoreText.scaleX = _scoreText.scaleY = 1.5;
 			_scoreText.touchable = false;
 			addChild(_scoreText);
+			
+			//power ups
+			_powerUps = new PowerUps();
+			_powerUps.x = 710;
+			_powerUps.y = 150;
+			addChild(_powerUps);
 			
 			//reward sequencer
 			_rewardSequencer = new RewardSequencer();
@@ -148,6 +158,8 @@ package com.cardScramble.scenes.game
 
 					_data.cardDict[card] = cardVO;
 					
+					var point:Point = new Point(xVal, yVal);
+					_data.cardLocations.push(point);
 					card.x = xVal;
 					card.y = yVal;
 			
@@ -178,6 +190,7 @@ package com.cardScramble.scenes.game
 		private function initListeners():void{
 			_cardContainer.addEventListener(TouchEvent.TOUCH, onCardTouch);
 			_data.addEventListener(CardScrambleGameData.UPDATE, onModelUpdate);
+			_powerUps.addEventListener(PowerUps.UPDATE, onPowerUpUpdate);
 			_rewardSequencer.addEventListener(RewardSequencer.SEQUENCE_COMPLETE, onSequenceComplete);
 			_soundIconsContainer.addEventListener(TouchEvent.TOUCH, onSoundIconTouch);
 		}
@@ -265,7 +278,6 @@ package com.cardScramble.scenes.game
 		private function onSoundIconTouch(e:TouchEvent):void{
 			
 			var touchBegan:Touch = e.getTouch(this, TouchPhase.BEGAN);
-			//var touchHover:Touch = e.getTouch(this, TouchPhase.BEGAN);
 			
 			if(touchBegan){
 				var icon:Image = e.target as Image;
@@ -308,6 +320,65 @@ package com.cardScramble.scenes.game
 					break;
 				
 			}	
+		}
+		
+		private function onPowerUpUpdate(e:Event):void{
+			
+			var type:String = e.data.type;
+			
+			switch(type){
+				
+				case PowerUps.SHUFFLE:
+					shuffleDeck();
+					break;
+				
+				case PowerUps.SCORE2X:
+					
+					break;
+				
+				case PowerUps.HOLD3:
+					
+					break;
+			}
+		}
+		
+		private function shuffleDeck():void{
+			
+			//randomize points
+			var newVect:Vector.<Point> = new Vector.<Point>;
+			var clone:Vector.<Point> = _data.cardLocations.concat();
+			
+			while(clone.length > 0){
+				var ranNum:int = Math.random()*clone.length;
+				var point:Point = clone[ranNum];
+				
+				newVect.push(point);
+				clone.splice(ranNum, 1);
+			}
+			
+			//tween card locations to new ponts
+			var len:int = _cardContainer.numChildren;
+			for (var i:int = 0; i < len; i++) {
+				
+				var card:Card = _cardContainer.getChildAt(i) as Card;
+				TweenLite.to(card, 1, {x:newVect[i].x, y:newVect[i].y, ease:Expo.easeOut});
+			}
+			
+			//reassign the card VO vert and horz index
+			var index:int = 0;
+			for (var j:int = 0; j < _data.NUM_CARDS_VERTICAL; j++) {
+				
+				for (var k:int = 0; k < _data.NUM_CARDS_HORIZONTAL; k++) {
+					
+					var targetCard:Card = _cardContainer.getChildAt(index) as Card;
+					var targetCardVO:CardVO = _data.cardDict[targetCard];
+					
+					targetCardVO.verticalPos = k;
+					targetCardVO.horizontalPos = j;
+					
+					index++;
+				}	
+			}
 		}
 		
 		private function onSequenceComplete(e:Event):void{

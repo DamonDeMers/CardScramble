@@ -63,8 +63,17 @@ package com.cardScramble
 		[Embed(source = "../../assets/sounds/noValidHand.mp3")]
 		public static const NoValidHand:Class;
 		
+		[Embed(source = "../../assets/sounds/registerRing1.mp3")]
+		public static const RegisterRing1:Class;
+		
 		[Embed(source = "../../assets/sounds/selectionComplete.mp3")]
 		public static const SelectionComplete:Class;
+		
+		[Embed(source = "../../assets/sounds/tally.mp3")]
+		public static const Tally:Class;
+		
+		[Embed(source = "../../assets/sounds/waterDrop.mp3")]
+		public static const WaterDrop:Class;
 		
 		
 		public function EmbeddedAssets(){

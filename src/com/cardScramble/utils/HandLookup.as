@@ -16,6 +16,7 @@ package com.cardScramble.utils
 		}
 		
 		public static function handToString(handInt:int):String{
+			
 			var hand:String;
 			
 			switch(handInt){

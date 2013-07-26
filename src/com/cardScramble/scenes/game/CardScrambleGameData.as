@@ -9,6 +9,7 @@ package com.cardScramble.scenes.game
 	import com.greensock.TweenLite;
 	
 	import flash.events.TimerEvent;
+	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
@@ -54,8 +55,11 @@ package com.cardScramble.scenes.game
 		private var _score:int = 0;
 		private var _tweenObj:Object = new Object;
 		
+		//view data
+		private var _cardLocations:Vector.<Point> = new Vector.<Point>;
+		
 		//timers
-		private var _countdownTimer:Timer = new Timer(1000, 30);
+		private var _countdownTimer:Timer = new Timer(1000, 180);
 		
 		
 		
@@ -65,7 +69,6 @@ package com.cardScramble.scenes.game
 		
 		
 		//================ PUBLIC METHODS =================//
-		
 
 		override public function init():void{
 			_countdownTimer.addEventListener(TimerEvent.TIMER, onCountdownTimer);
@@ -83,6 +86,7 @@ package com.cardScramble.scenes.game
 			_score += handScoreValue;
 			
 			_handsAchieved.push(_winningHand);
+			_cardLocations.length = 0;
 			
 			TweenLite.to(_tweenObj, 1, {delay:2, score:_score, onUpdate:onScoreUpdate});
 			
@@ -101,6 +105,7 @@ package com.cardScramble.scenes.game
 		override public function close():void{
 			_model.endScene();
 		}
+		
 		
 		
 		//================ PRIVATE METHODS =================//
@@ -133,6 +138,8 @@ package com.cardScramble.scenes.game
 
 		public function get cardDict():Dictionary { return _cardDict; }
 		public function set cardDict(value:Dictionary):void { _cardDict = value; }
+		
+		public function get cardLocations():Vector.<Point> { return _cardLocations; }
 		
 		public function get handsAchieved():Vector.<HandVO> { return _handsAchieved; }
 
