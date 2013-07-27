@@ -3,10 +3,8 @@ package com.cardScramble.scenes.results {
 	import com.abacus.core.ISceneData;
 	import com.abacus.scenes.results.Results;
 	import com.cardScramble.utils.PokerConsts;
-	import com.cardScramble.utils.ScoreTable;
 	import com.greensock.TweenLite;
 	
-	import starling.animation.Tween;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;

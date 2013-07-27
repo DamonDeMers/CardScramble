@@ -1,7 +1,7 @@
 package com.cardScramble.scenes.game
 {
 	import com.abacus.assetManager.AssetManager;
-	import cardScramble.scenes.game.CardVO;
+	import com.cardScramble.scenes.game.data.CardVO;
 	import com.greensock.TweenLite;
 	import com.greensock.TweenMax;
 	import com.greensock.easing.Expo;
@@ -21,6 +21,7 @@ package com.cardScramble.scenes.game
 		
 		//data
 		private var _data:CardVO;
+		private var _selectedBool:Boolean = false;
 		
 		//assets
 		private var _cardImage:Image;
@@ -50,7 +51,7 @@ package com.cardScramble.scenes.game
 			
 			this.filter = BlurFilter.createDropShadow();
 		}
-		
+
 		private function addConnectors():void{
 			
 			var count:int = 8;
@@ -92,6 +93,7 @@ package com.cardScramble.scenes.game
 		public function selected():void{
 			
 			this.touchable = false;
+			_selectedBool = true;
 			
 			TweenMax.to(this, 0.5, {scaleX:1.025, scaleY:1.025, yoyo:true, repeat:-1, ease:Quad.easeInOut});
 			
@@ -102,6 +104,7 @@ package com.cardScramble.scenes.game
 		public function unselected():void{
 			
 			this.touchable = true;
+			_selectedBool = false;
 			
 			TweenLite.to(this, 0.5, {scaleX:1, scaleY:1, ease:Expo.easeIn});
 			removeAllConnectors();
@@ -110,7 +113,7 @@ package com.cardScramble.scenes.game
 			this.filter = BlurFilter.createDropShadow();
 		}
 		
-		public function reveal(delay:Number):void{
+		public function reveal(delay:Number = 0.1):void{
 			
 			var cardOrigX:Number = _cardImage.x;
 			
@@ -179,6 +182,7 @@ package com.cardScramble.scenes.game
 		//============== GETTERS AND SETTERS =================//
 		
 		public function get cardImage():Image { return _cardImage; }
+		public function get selectedBool():Boolean { return _selectedBool; }
 		
 	}
 }

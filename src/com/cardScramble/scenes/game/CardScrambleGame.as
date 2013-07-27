@@ -3,17 +3,12 @@ package com.cardScramble.scenes.game
 	import com.abacus.assetManager.AssetManager;
 	import com.abacus.core.ISceneData;
 	import com.abacus.scenes.game.Game;
+	import com.cardScramble.scenes.game.data.CardScrambleGameData;
+	import com.cardScramble.scenes.game.data.GameBoard;
 	import com.cardScramble.utils.StringUtils;
-	import com.cardScramble.utils.VectorUtils;
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Expo;
 	
-	import flash.geom.Point;
 	import flash.media.SoundMixer;
 	import flash.media.SoundTransform;
-	import flash.utils.getDefinitionByName;
-	
-	import cardScramble.scenes.game.CardVO;
 	
 	import starling.display.Image;
 	import starling.display.Sprite;
@@ -26,8 +21,8 @@ package com.cardScramble.scenes.game
 	import starling.text.TextField;
 	import starling.textures.Texture;
 	
-	public class CardScrambleGame extends Game
-	{
+	public class CardScrambleGame extends Game{
+		
 		[Embed(source="../../../../assets/fonts/JandaManateeSolid.fnt", mimeType="application/octet-stream")]
 		public static const FontXml:Class;
 		
@@ -44,9 +39,12 @@ package com.cardScramble.scenes.game
 		private var _data:CardScrambleGameData;
 		
 		//assets
-		private var _cardContainer:Sprite = new Sprite();
+		private var _gameBoard:GameBoard;
 		private var _rewardSequencer:RewardSequencer;
 		private var _powerUps:PowerUps;
+		//private var _timer:RoundTimer;
+		
+		//hud
 		private var _soundIconsContainer:Sprite;
 		private var _musicIcon:Image;
 		private var _soundFxIcon:Image;
@@ -56,24 +54,25 @@ package com.cardScramble.scenes.game
 		private var _scoreText:TextField;
 		
 		//data
-		private static var _mousePoint:Point = new Point();
 		private var _prevCard:Card;
 		
-		//souns
+		//sounds
 		private var _stBgMusic:SoundTransform;
+		
+		
+		
 		
 		public function CardScrambleGame(){
 			super();
 		}
 		
 		private function initAssets():void{
-			
-			newHand();
-			
+		
 			//cards
-			_cardContainer.x = 180;
-			_cardContainer.y = 168;
-			addChild(_cardContainer);
+			_gameBoard = new GameBoard(_data);
+			_gameBoard.x = 180;
+			_gameBoard.y = 168;
+			addChild(_gameBoard);
 			
 			//setup text
 			var texture:Texture = Texture.fromBitmap(new FontTexture());
@@ -129,72 +128,24 @@ package com.cardScramble.scenes.game
 			_assets.playSound("BgMusic", 0, 99, _stBgMusic);
 		}
 		
-		private function newHand():void{
-			
-			//remove existing hand
-			while(_cardContainer.numChildren > 0){
-				_cardContainer.removeChildAt(0);
-			}
-			
-			var cardNameCopy:Array = _data.cardNames.slice(0, _data.cardNames.length-1);
-			var xVal:Number = 0;
-			var yVal:Number = 0;
-			var revealDelay:Number = 0;
-
-			
-			for (var i:int = 0; i < _data.NUM_CARDS_VERTICAL; i++) {
-				
-				for (var j:int = 0; j < _data.NUM_CARDS_HORIZONTAL; j++) {
-					
-					var ranNum:int = Math.random() * cardNameCopy.length;
-					var cardString:String = cardNameCopy[ranNum];
-					var cardVO:CardVO = new CardVO;
-					var card:Card = new Card(cardString, cardVO);
-					
-					cardVO.suit = cardString.charAt(0);
-					cardVO.value = cardString.substr(1, cardString.length);
-					cardVO.verticalPos = i;
-					cardVO.horizontalPos = j;
-
-					_data.cardDict[card] = cardVO;
-					
-					var point:Point = new Point(xVal, yVal);
-					_data.cardLocations.push(point);
-					card.x = xVal;
-					card.y = yVal;
-			
-					_cardContainer.addChild(card);		
-					cardNameCopy.splice(ranNum, 1);
-					
-					xVal += card.cardImage.width + 20;
-					
-					card.reveal(revealDelay);
-					revealDelay += 0.1;
-				}
-				
-				xVal = 0;
-				yVal += card.cardImage.height + 25;
-			}
-		}
 		
-		private function resetHand():void{
-			
-			var len:int = _cardContainer.numChildren;
-			for (var i:int = 0; i < len; i++) {
-				var card:Card = _cardContainer.getChildAt(i) as Card;
-				card.unselected();
-			}
-			
-		}
 		
 		private function initListeners():void{
-			_cardContainer.addEventListener(TouchEvent.TOUCH, onCardTouch);
+			
 			_data.addEventListener(CardScrambleGameData.UPDATE, onModelUpdate);
 			_powerUps.addEventListener(PowerUps.UPDATE, onPowerUpUpdate);
 			_rewardSequencer.addEventListener(RewardSequencer.SEQUENCE_COMPLETE, onSequenceComplete);
 			_soundIconsContainer.addEventListener(TouchEvent.TOUCH, onSoundIconTouch);
 		}
 
+		private function initGame():void{
+			_gameBoard.newHand();
+			
+			_powerUps.add(PowerUpTypes.SHUFFLE);
+			_powerUps.add(PowerUpTypes.SCORE2X);
+			_powerUps.add(PowerUpTypes.HOLD3);
+		}
+		
 		
 		//================== PUBLIC METHODS =====================//
 		
@@ -204,6 +155,7 @@ package com.cardScramble.scenes.game
 			
 			initAssets();
 			initListeners();
+			initGame();
 		}
 		
 		
@@ -218,62 +170,6 @@ package com.cardScramble.scenes.game
 		
 		
 		//================== EVENT HANDLERS =====================//
-		
-		private function onCardTouch(e:TouchEvent):void{
-			
-			var touchMoved:Touch = e.getTouch(this, TouchPhase.MOVED);
-			var touchEnded:Touch = e.getTouch(this, TouchPhase.ENDED);
-			
-			if(touchMoved){
-				
-				_mousePoint.x = touchMoved.globalX;
-				_mousePoint.y = touchMoved.globalY;
-
-				var len:int = _cardContainer.numChildren;
-				for (var j:int = 0; j < len; j++) {
-					
-					var card:Card = _cardContainer.getChildAt(j) as Card;
-					
-					if(card.cardImage.hitTest(card.globalToLocal(_mousePoint)) && card.touchable){
-						
-						var cardVO:CardVO = _data.cardDict[card];
-						
-						card.touchable = false;
-						card.selected();
-						
-						_data.cardSelected.push(cardVO);
-						
-						_assets.playSound(String("CardSelect" + _data.cardSelected.length), 0, 0, ST_SOUND_FX);
-						
-						if(_data.cardSelected.length > 1){
-							
-							_prevCard.showConnector(cardVO);
-							_cardContainer.setChildIndex(card, _cardContainer.numChildren-1);
-							
-							if(_data.cardSelected.length == 5){
-								
-								_data.selectionComplete();
-							}
-						}
-						
-						_prevCard = card;
-					}	
-				}
-			}
-			
-			if(touchEnded){
-				
-				var lenEnd:int = _cardContainer.numChildren;
-				for (var i:int = 0; i < lenEnd; i++){
-					var targetCard:Card = _cardContainer.getChildAt(i) as Card;
-					
-					targetCard.unselected();
-				}
-				
-				_assets.playSound("DropHand", 0, 0, ST_SOUND_FX);
-				_data.abortSelection();
-			}
-		}	
 		
 		private function onSoundIconTouch(e:TouchEvent):void{
 			
@@ -311,14 +207,13 @@ package com.cardScramble.scenes.game
 					break;
 				
 				case CardScrambleGameData.ROUND_COMPLETE:
-					_cardContainer.removeEventListener(TouchEvent.TOUCH, onCardTouch);
-					_rewardSequencer.createSequence(e.data, _mousePoint);
+					_gameBoard.inactivate();
+					_rewardSequencer.createSequence(e.data, GameBoard.MOUSE_POINT); 
 					break;
 				
 				case CardScrambleGameData.UPDATE_SCORE:
 					_scoreText.text = String("Score: " + e.data.score);
 					break;
-				
 			}	
 		}
 		
@@ -329,62 +224,25 @@ package com.cardScramble.scenes.game
 			switch(type){
 				
 				case PowerUps.SHUFFLE:
-					shuffleDeck();
+					_gameBoard.shuffleDeck();
 					break;
 				
 				case PowerUps.SCORE2X:
-					
+					_data.scoreMultiplier = 2;
 					break;
 				
 				case PowerUps.HOLD3:
-					
+					_gameBoard.holdThree();
 					break;
 			}
 		}
 		
-		private function shuffleDeck():void{
-			
-			//randomize points
-			var newVect:Vector.<Point> = new Vector.<Point>;
-			var clone:Vector.<Point> = _data.cardLocations.concat();
-			
-			while(clone.length > 0){
-				var ranNum:int = Math.random()*clone.length;
-				var point:Point = clone[ranNum];
-				
-				newVect.push(point);
-				clone.splice(ranNum, 1);
-			}
-			
-			//tween card locations to new ponts
-			var len:int = _cardContainer.numChildren;
-			for (var i:int = 0; i < len; i++) {
-				
-				var card:Card = _cardContainer.getChildAt(i) as Card;
-				TweenLite.to(card, 1, {x:newVect[i].x, y:newVect[i].y, ease:Expo.easeOut});
-			}
-			
-			//reassign the card VO vert and horz index
-			var index:int = 0;
-			for (var j:int = 0; j < _data.NUM_CARDS_VERTICAL; j++) {
-				
-				for (var k:int = 0; k < _data.NUM_CARDS_HORIZONTAL; k++) {
-					
-					var targetCard:Card = _cardContainer.getChildAt(index) as Card;
-					var targetCardVO:CardVO = _data.cardDict[targetCard];
-					
-					targetCardVO.verticalPos = k;
-					targetCardVO.horizontalPos = j;
-					
-					index++;
-				}	
-			}
-		}
+		
 		
 		private function onSequenceComplete(e:Event):void{
 			
-			_data.MODE == 1 ? newHand() : resetHand();
-			_cardContainer.addEventListener(TouchEvent.TOUCH, onCardTouch);
+			_data.MODE == 1 ? _gameBoard.newHand() : _gameBoard.resetHand();
+			_gameBoard.activate();
 		}
 		
 		

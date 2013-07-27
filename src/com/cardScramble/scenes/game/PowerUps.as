@@ -2,8 +2,6 @@ package com.cardScramble.scenes.game
 {
 	import com.abacus.assetManager.AssetManager;
 	import com.greensock.TweenLite;
-	import com.greensock.easing.Bounce;
-	import com.greensock.easing.Elastic;
 	import com.greensock.easing.Expo;
 	
 	import flash.utils.Dictionary;
@@ -31,48 +29,28 @@ package com.cardScramble.scenes.game
 		//data
 		private var _powerUpDict:Dictionary = new Dictionary();
 		
+		//assets
 		private var _powerUpChipsContainer:Sprite;
 		
+		
+		
 		public function PowerUps(){
-			super();
 			
 			initAssets();
 			initListeners();
 		}
 		
+		
+		//=============== PRIVATE METHODS ==================//
+		
 		private function initAssets():void{
 			
 			_powerUpChipsContainer = new Sprite();
 			addChild(_powerUpChipsContainer);
-			
-			addChip("shuffleChip");
 		}
 		
 		private function initListeners():void{
 			_powerUpChipsContainer.addEventListener(TouchEvent.TOUCH, onPowerUpTouch);
-		}
-		
-		public function addChip(type:String):void{
-			
-			var powerUpChip:Image = new Image(_assets.getTexture(type));
-			
-			powerUpChip.pivotX = powerUpChip.pivotY = powerUpChip.width/2;
-			powerUpChip.filter = BlurFilter.createDropShadow(5, 0.785, 0x0, 0.75);
-			_powerUpChipsContainer.addChild(powerUpChip);
-			
-			//associate chip with event type
-			switch(type){
-				
-				case "shuffleChip":
-					_powerUpDict[powerUpChip] = SHUFFLE;
-					break;
-				case "score2xChip":
-					_powerUpDict[powerUpChip] = SCORE2X;
-					break;
-				case "hold3Chip":
-					_powerUpDict[powerUpChip] = HOLD3;
-					break;
-			}
 		}
 		
 		private function onPowerUpTouch(e:TouchEvent):void{
@@ -112,6 +90,39 @@ package com.cardScramble.scenes.game
 			function removePowerUp():void{
 				removeChild(powerUp);
 			}
+		}
+		
+		
+		
+		//=============== PUBLIC METHODS ==================//
+		
+		public function add(type:String):void{
+			
+			var powerUpChip:Image = new Image(_assets.getTexture(type));
+			
+			powerUpChip.pivotX = powerUpChip.pivotY = powerUpChip.width/2;
+			powerUpChip.filter = BlurFilter.createDropShadow(5, 0.785, 0x0, 0.75);
+			powerUpChip.y = _powerUpChipsContainer.height;
+			if(_powerUpChipsContainer.numChildren > 0){
+				powerUpChip.y += 20;
+			}
+			_powerUpChipsContainer.addChild(powerUpChip);
+			
+			//associate chip with event type
+			switch(type){
+				
+				case "shuffleChip":
+					_powerUpDict[powerUpChip] = SHUFFLE;
+					break;
+				case "score2xChip":
+					_powerUpDict[powerUpChip] = SCORE2X;
+					break;
+				case "hold3Chip":
+					_powerUpDict[powerUpChip] = HOLD3;
+					break;
+			}
+			
+			
 		}
 		
 	}

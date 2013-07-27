@@ -2,11 +2,10 @@ package com.cardScramble.scenes.results
 {
 	import com.abacus.core.SceneData;
 	import com.cardScramble.core.CardScrambleModel;
+	import com.cardScramble.scenes.game.data.HandVO;
 	import com.cardScramble.utils.PokerConsts;
 	import com.cardScramble.utils.ScoreTable;
 	import com.greensock.TweenLite;
-	
-	import cardScramble.scenes.game.HandVO;
 	
 	public class CardScrambleResultsData extends SceneData{
 		
@@ -37,7 +36,7 @@ package com.cardScramble.scenes.results
 		}
 
 		override public function init():void{
-			_handsAchieved = fakeHandsForTest();  //_model.handsAchieved; 
+			_handsAchieved = _model.handsAchieved; //fakeHandsForTest();  
 			_numHandAchievedByType = handsAchievedByType();
 			_handScores = handScores();
 			updateHandScores();

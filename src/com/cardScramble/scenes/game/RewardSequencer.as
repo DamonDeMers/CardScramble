@@ -38,6 +38,7 @@ package com.cardScramble.scenes.game
 		//consts
 		public static const SEQUENCE_COMPLETE:String = "sequenceComplete";
 		private const SPECIAL_SEQUENCE_THRESHOLD:int = 4;
+		private const TIMER_BONUS_MAX_AMOUNT:int = 5000;
 		
 		//global
 		private var _assets:AssetManager = AssetManager.getInstance();
@@ -144,6 +145,7 @@ package com.cardScramble.scenes.game
 			_message2Text.touchable = false;
 			addChild(_message2Text);
 			
+			
 			//swipe particle system
 			_psSwipeXML = XML(new _pdSwipePEX());
 			_psSwipeTexture = Texture.fromBitmap(new _pdSwipePNG());
@@ -157,7 +159,7 @@ package com.cardScramble.scenes.game
 		
 		//=============== PUBLIC METHODS ================//
 		
-		public function createSequence(data:Object, endPoint:Point):void{
+		public function createSequence(data:Object, endPoint:Point, timerBonus:Number = 0):void{
 			
 			//particles
 			if(data.handInt < SPECIAL_SEQUENCE_THRESHOLD){
@@ -173,8 +175,8 @@ package com.cardScramble.scenes.game
 					//messages
 					_messageText.text = String(data.hand + "!");
 					_message2Text.text = String(" +" + data.score);
-					TweenMax.to(_messageText, 0.5, {alpha:1, scaleX:4, scaleY:4, onComplete:onMessageComplete, onCompleteParams:[data, endPoint]});
-					TweenMax.to(_message2Text, 0.5, {delay:0.25, alpha:1, scaleX:4, scaleY:4});
+					TweenLite.to(_messageText, 0.5, {alpha:1, scaleX:4, scaleY:4});
+					TweenLite.to(_message2Text, 0.5, {delay:0.25, alpha:1, scaleX:4, scaleY:4, onComplete:onMessageComplete, onCompleteParams:[data, endPoint]});
 					_assets.playSound(String("SelectionComplete"), 0, 0, CardScrambleGame.ST_SOUND_FX);
 				}
 				
@@ -253,8 +255,8 @@ package com.cardScramble.scenes.game
 			
 			if(data.handInt < SPECIAL_SEQUENCE_THRESHOLD){
 				
-				TweenMax.to(_messageText, 0.5, {alpha:0, onComplete:onSequenceComplete});
-				TweenMax.to(_message2Text, 0.5, {alpha:0});
+				TweenLite.to(_messageText, 0.5, {alpha:0});
+				TweenLite.to(_message2Text, 0.5, {alpha:0, onComplete:onSequenceComplete});
 				
 			} else {
 				

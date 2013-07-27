@@ -3,11 +3,10 @@ package com.cardScramble.core
 	import com.abacus.core.Model;
 	import com.abacus.core.SceneVO;
 	import com.cardScramble.scenes.game.CardScrambleGame;
-	import com.cardScramble.scenes.game.CardScrambleGameData;
+	import com.cardScramble.scenes.game.data.CardScrambleGameData;
+	import com.cardScramble.scenes.game.data.HandVO;
 	import com.cardScramble.scenes.results.CardScrambleResults;
 	import com.cardScramble.scenes.results.CardScrambleResultsData;
-	
-	import cardScramble.scenes.game.HandVO;
 	
 	public class CardScrambleModel extends Model{
 		

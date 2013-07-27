@@ -1,7 +1,7 @@
 package com.cardScramble.utils {
 	
-	import cardScramble.scenes.game.CardVO;
-	import cardScramble.scenes.game.HandVO;
+	import com.cardScramble.scenes.game.data.CardVO;
+	import com.cardScramble.scenes.game.data.HandVO;
 	
 	public class HandEvaluator {
 		public static const ACE:String = "A";
