@@ -49,6 +49,7 @@ package com.cardScramble.scenes.game.data
 		private var _score:int = 0;
 		private var _scoreMultiplier:int = 1;
 		private var _tweenObj:Object = new Object;
+		private var _roundCount:int = 0;
 		
 		//view data
 		private var _gridData:Vector.<GridPositionVO> = new Vector.<GridPositionVO>;
@@ -80,6 +81,8 @@ package com.cardScramble.scenes.game.data
 			var handScoreValue:int = ScoreTable.handIntToScoreValue(_winningHand.hand) * _scoreMultiplier;
 			_tweenObj.score = _score;
 			_score += handScoreValue;
+			
+			_roundCount++;
 			
 			_handsAchieved.push(_winningHand);
 			_gridData.length = 0;
