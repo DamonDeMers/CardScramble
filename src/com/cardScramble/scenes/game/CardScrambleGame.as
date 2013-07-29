@@ -141,9 +141,9 @@ package com.cardScramble.scenes.game
 		private function initGame():void{
 			_gameBoard.newHand();
 			
-			_powerUps.add(PowerUpTypes.SHUFFLE);
-			_powerUps.add(PowerUpTypes.SCORE2X);
-			_powerUps.add(PowerUpTypes.HOLD3);
+			//_powerUps.add(PowerUpTypes.SHUFFLE);
+			//_powerUps.add(PowerUpTypes.SCORE2X);
+			//_powerUps.add(PowerUpTypes.HOLD3);
 		}
 		
 		
