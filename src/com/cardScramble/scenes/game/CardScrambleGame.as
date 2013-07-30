@@ -70,8 +70,8 @@ package com.cardScramble.scenes.game
 		
 			//cards
 			_gameBoard = new GameBoard(_data);
-			_gameBoard.x = 180;
-			_gameBoard.y = 168;
+			_gameBoard.x = 175;
+			_gameBoard.y = 162;
 			addChild(_gameBoard);
 			
 			//setup text
@@ -208,7 +208,10 @@ package com.cardScramble.scenes.game
 				
 				case CardScrambleGameData.ROUND_COMPLETE:
 					_gameBoard.inactivate();
-					_rewardSequencer.createSequence(e.data, GameBoard.MOUSE_POINT); 
+					_rewardSequencer.createSequence(e.data, GameBoard.MOUSE_POINT);
+					if(_data.roundCount % 5 == 0){
+						_powerUps.add(PowerUpTypes.SHUFFLE);
+					}
 					break;
 				
 				case CardScrambleGameData.UPDATE_SCORE:

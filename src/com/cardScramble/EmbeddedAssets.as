@@ -9,7 +9,7 @@ package com.cardScramble
 		
 		[Embed(source = "../../assets/images/Cards.png")]
 		public static const Cards:Class;
-		
+	
 		[Embed(source="../../assets/images/Assets.xml", mimeType="application/octet-stream")]
 		public static const AssetsXml:Class;
 		

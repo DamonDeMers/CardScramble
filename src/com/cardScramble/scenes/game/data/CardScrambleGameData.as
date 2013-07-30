@@ -67,6 +67,7 @@ package com.cardScramble.scenes.game.data
 		
 		//================ PUBLIC METHODS =================//
 
+
 		override public function init():void{
 			_countdownTimer.addEventListener(TimerEvent.TIMER, onCountdownTimer);
 			_countdownTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onCountdownTimerComplete);
@@ -146,6 +147,8 @@ package com.cardScramble.scenes.game.data
 		public function get cardNames():Array { return _cardNames; }
 		
 		public function get score():int { return _score; }
+		
+		public function get roundCount():int { return _roundCount; }
 
 	}
 }

@@ -33,12 +33,11 @@ package com.cardScramble.scenes.game
 		private var _powerUpChipsContainer:Sprite;
 		
 		
-		
 		public function PowerUps(){
-			
 			initAssets();
 			initListeners();
 		}
+		
 		
 		
 		//=============== PRIVATE METHODS ==================//
@@ -103,9 +102,11 @@ package com.cardScramble.scenes.game
 			powerUpChip.pivotX = powerUpChip.pivotY = powerUpChip.width/2;
 			powerUpChip.filter = BlurFilter.createDropShadow(5, 0.785, 0x0, 0.75);
 			powerUpChip.y = _powerUpChipsContainer.height;
+			
 			if(_powerUpChipsContainer.numChildren > 0){
 				powerUpChip.y += 20;
 			}
+			
 			_powerUpChipsContainer.addChild(powerUpChip);
 			
 			//associate chip with event type
@@ -121,9 +122,8 @@ package com.cardScramble.scenes.game
 					_powerUpDict[powerUpChip] = HOLD3;
 					break;
 			}
-			
-			
 		}
+		
 		
 	}
 }

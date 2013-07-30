@@ -63,13 +63,13 @@ package com.cardScramble.scenes.game.data
 					var cardString:String = _cardsCopy[ranNum];
 					var gridPositionVO:GridPositionVO = new GridPositionVO;
 					var cardVO:CardVO = new CardVO;
-					var card:Card = new Card(cardString, cardVO);
 					
 					cardVO.suit = cardString.charAt(0);
 					cardVO.value = cardString.substr(1, cardString.length);
 					cardVO.verticalPos = i;
 					cardVO.horizontalPos = j;
-					_data.cardDict[card] = cardVO;
+					
+					var card:Card = new Card(cardVO);
 					
 					card.x = xVal;
 					card.y = yVal;
@@ -84,17 +84,18 @@ package com.cardScramble.scenes.game.data
 						_data.gridData.push(gridPositionVO);
 					}
 					
-					_cardContainer.addChild(card);		
+					_cardContainer.addChild(card);	
+					_data.cardDict[card] = cardVO;
 					_cardsCopy.splice(ranNum, 1);
 					
-					xVal += card.cardImage.width + 20;
+					xVal += card.cardWidth + 10;
 					
 					card.reveal(revealDelay);
 					revealDelay += 0.1;
 				}
 				
 				xVal = 0;
-				yVal += card.cardImage.height + 25;
+				yVal += card.cardHeight + 25;
 			}
 		}
 		
@@ -189,7 +190,7 @@ package com.cardScramble.scenes.game.data
 					var cardString:String = _cardsCopy[ranNum];
 					
 					var newCardVO:CardVO = new CardVO;
-					var newCard:Card = new Card(cardString, cardVO);
+					var newCard:Card = new Card(cardVO);
 					
 					newCardVO.suit = cardString.charAt(0);
 					newCardVO.value = cardString.substr(1, cardString.length);
@@ -274,7 +275,7 @@ package com.cardScramble.scenes.game.data
 			} else {
 				
 				if(touchBegan){
-					var cardTouchBegan:Card = Image(e.target).parent as Card;
+					var cardTouchBegan:Card = Image(e.target).parent.parent as Card;
 					var cardVOTouchBegan:CardVO = _data.cardDict[cardTouchBegan];
 					
 					cardTouchBegan.selected();

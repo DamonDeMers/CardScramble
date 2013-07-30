@@ -1,7 +1,6 @@
 package
 {
 	import com.abacus.assetManager.AssetManager;
-	import com.abacus.common.Global;
 	import com.cardScramble.EmbeddedAssets;
 	import com.cardScramble.core.CardScrambleModel;
 	import com.cardScramble.core.CardScrambleShell;
@@ -31,7 +30,6 @@ package
 		private var _assets:AssetManager = AssetManager.getInstance();
 		
 		//global
-		private var _global:Global = Global.getInstance();
 		private var _debug:Boolean;
 		
 		private var _shell:CardScrambleShell;
