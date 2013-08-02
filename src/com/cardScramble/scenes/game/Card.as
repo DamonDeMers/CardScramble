@@ -1,6 +1,7 @@
 package com.cardScramble.scenes.game
 {
 	import com.abacus.assetManager.AssetManager;
+	import com.cardScramble.hud.Hud;
 	import com.cardScramble.scenes.game.data.CardVO;
 	import com.greensock.TweenLite;
 	import com.greensock.TweenMax;
@@ -198,7 +199,7 @@ package com.cardScramble.scenes.game
 			TweenLite.to(_cardBack, 0.1, {delay:delay, x:_cardBack.x + _cardBack.width/2, scaleX:0, onStart:onRevealStart, onComplete:onRevealComplete, onCompleteParams:[cardOrigX]});
 			
 			function onRevealStart():void{
-				_assets.playSound("CardFlip", 0, 0, CardScrambleGame.ST_SOUND_FX);
+				_assets.playSound("CardFlip", 0, 0, Hud.ST_SOUND_FX);
 			}
 			
 			function onRevealComplete(origX:Number):void{
@@ -214,20 +215,18 @@ package com.cardScramble.scenes.game
 			var vertDiff:int = prevCardVO.verticalPos - _data.verticalPos;
 			var horzDiff:int = prevCardVO.horizontalPos - _data.horizontalPos;
 			
-			trace("vertDiff: " + vertDiff + " horzDif " + horzDiff);
-			
 			var connector:Image;
 			
 			if(vertDiff == -1 && horzDiff == 0){
-				connector = _connectorContainer.getChildAt(4) as Image;
+				connector = _connectorContainer.getChildAt(2) as Image;
 				connector.visible = true;
 			}
 			else if (vertDiff == -1 && horzDiff == 1) {
-				connector = _connectorContainer.getChildAt(5) as Image;
+				connector = _connectorContainer.getChildAt(1) as Image;
 				connector.visible = true;
 			}
 			else if (vertDiff == 0 && horzDiff == 1){
-				connector = _connectorContainer.getChildAt(6) as Image;
+				connector = _connectorContainer.getChildAt(0) as Image;
 				connector.visible = true;
 			}
 			else if (vertDiff == 1 && horzDiff == 1){
@@ -235,22 +234,21 @@ package com.cardScramble.scenes.game
 				connector.visible = true;
 			}
 			else if (vertDiff == 1 && horzDiff == 0){
-				connector = _connectorContainer.getChildAt(0) as Image;
+				connector = _connectorContainer.getChildAt(6) as Image;
 				connector.visible = true;
 			}
 			else if (vertDiff == 1 && horzDiff == -1){
-				connector = _connectorContainer.getChildAt(1) as Image;
+				connector = _connectorContainer.getChildAt(5) as Image;
 				connector.visible = true;
 			}
 			else if (vertDiff == 0 && horzDiff == -1){
-				connector = _connectorContainer.getChildAt(2) as Image;
+				connector = _connectorContainer.getChildAt(4) as Image;
 				connector.visible = true;
 			}
 			else if (vertDiff == -1 && horzDiff == -1){
 				connector = _connectorContainer.getChildAt(3) as Image;
 				connector.visible = true;
 			}
-			
 		}
 		
 		

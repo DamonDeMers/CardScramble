@@ -1,6 +1,7 @@
 package com.cardScramble.scenes.game
 {
 	import com.abacus.assetManager.AssetManager;
+	import com.cardScramble.hud.Hud;
 	import com.greensock.TweenLite;
 	import com.greensock.TweenMax;
 	import com.greensock.easing.Expo;
@@ -42,6 +43,7 @@ package com.cardScramble.scenes.game
 		
 		//global
 		private var _assets:AssetManager = AssetManager.getInstance();
+		private var _hud:Hud = Hud.getInstance();
 		
 		//assets
 		private var _bg:Image;
@@ -168,7 +170,7 @@ package com.cardScramble.scenes.game
 					
 					// note: Alpha set to 0.. we don't want the message here, just the onComplete event
 					TweenMax.to(_messageText, 0.5, {alpha:0, scaleX:4, scaleY:4, onComplete:onMessageComplete, onCompleteParams:[data, endPoint]});
-					_assets.playSound("NoValidHand", 0, 0, CardScrambleGame.ST_SOUND_FX);
+					_assets.playSound("NoValidHand", 0, 0, Hud.ST_SOUND_FX);
 					
 				} else {
 					
@@ -177,7 +179,7 @@ package com.cardScramble.scenes.game
 					_message2Text.text = String(" +" + data.score);
 					TweenLite.to(_messageText, 0.5, {alpha:1, scaleX:4, scaleY:4});
 					TweenLite.to(_message2Text, 0.5, {delay:0.25, alpha:1, scaleX:4, scaleY:4, onComplete:onMessageComplete, onCompleteParams:[data, endPoint]});
-					_assets.playSound(String("SelectionComplete"), 0, 0, CardScrambleGame.ST_SOUND_FX);
+					_assets.playSound(String("SelectionComplete"), 0, 0, Hud.ST_SOUND_FX);
 				}
 				
 			} else {
@@ -221,8 +223,8 @@ package com.cardScramble.scenes.game
 				}
 				
 				//sounds
-				_assets.playSound(String("Applause"), 0, 0, CardScrambleGame.ST_SOUND_FX);
-				_assets.playSound(String("Achieve1"), 0, 0, CardScrambleGame.ST_SOUND_FX);
+				_assets.playSound(String("Applause"), 0, 0, Hud.ST_SOUND_FX);
+				_assets.playSound(String("Achieve1"), 0, 0, Hud.ST_SOUND_FX);
 				
 				//text
 				TweenLite.to(_winningHandText, 1, {delay:0.25, x:0, ease:Expo.easeOut, onComplete:onMessageComplete, onCompleteParams:[data, endPoint]});
@@ -300,6 +302,7 @@ package com.cardScramble.scenes.game
 		
 		private function removeCoin(coin:MovieClip):void{
 			
+			_hud.animateCoinIcon();
 			_assets.playSound("CoinRedeem");
 			removeChild(coin);
 		}

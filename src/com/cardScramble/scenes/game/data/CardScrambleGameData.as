@@ -2,6 +2,8 @@ package com.cardScramble.scenes.game.data
 {
 	import com.abacus.core.SceneData;
 	import com.cardScramble.core.CardScrambleModel;
+	import com.cardScramble.scenes.store.Store;
+	import com.cardScramble.scenes.store.data.StoreItemVO;
 	import com.cardScramble.utils.CardSortUtils;
 	import com.cardScramble.utils.HandEvaluator;
 	import com.cardScramble.utils.HandLookup;
@@ -40,22 +42,24 @@ package com.cardScramble.scenes.game.data
 		private var _handEvaluator:HandEvaluator = HandEvaluator.getInstance();
 		
 		//storage
-		private var _cardDict:Dictionary = new Dictionary();
-		private var _cardsSelected:Vector.<CardVO> = new Vector.<CardVO>;
-		private var _handsAchieved:Vector.<HandVO> = new Vector.<HandVO>;
+		private var _cardDict:Dictionary;
+		private var _cardsSelected:Vector.<CardVO>;
+		private var _handsAchieved:Vector.<HandVO>;
+		private var _gameBoardCards:Array = [];
 	
 		//data
 		private var _winningHand:HandVO;
-		private var _score:int = 0;
+		private var _score:int;
 		private var _scoreMultiplier:int = 1;
 		private var _tweenObj:Object = new Object;
 		private var _roundCount:int = 0;
+		private var _powerUps:Vector.<StoreItemVO> = new Vector.<StoreItemVO>;
 		
 		//view data
 		private var _gridData:Vector.<GridPositionVO> = new Vector.<GridPositionVO>;
 		
 		//timers
-		private var _countdownTimer:Timer = new Timer(1000, 180);
+		private var _countdownTimer:Timer;
 		
 		
 		
@@ -64,16 +68,42 @@ package com.cardScramble.scenes.game.data
 		}
 		
 		
-		
 		//================ PUBLIC METHODS =================//
 
-
 		override public function init():void{
+			
+			_countdownTimer = new Timer(1000, 5);
+			_cardsSelected = new Vector.<CardVO>;
+			_handsAchieved = new Vector.<HandVO>;
+			
+			_cardDict = new Dictionary();
+			
+			_score = _model.sharedObject.data.balance;
+			_powerUps = initPowerUps();
+			
 			_countdownTimer.addEventListener(TimerEvent.TIMER, onCountdownTimer);
 			_countdownTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onCountdownTimerComplete);
 			_countdownTimer.start();
 		}
 
+		override public function close():void{
+			
+			_model.sharedObject.data.balance = _score;
+			_model.sharedObject.data.inventory = _powerUps;
+			
+			_gridData.length = 0;
+			_gameBoardCards = [];
+			_scoreMultiplier = 1;
+			_winningHand = null;
+			
+			_roundCount = 0;
+			
+			_countdownTimer.removeEventListener(TimerEvent.TIMER, onCountdownTimer);
+			_countdownTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onCountdownTimerComplete);
+			
+			_model.endScene();
+		}
+		
 		public function selectionComplete():void{
 			
 			_cardsSelected = CardSortUtils.sortCardByHighCardSelected(_cardsSelected);
@@ -81,17 +111,22 @@ package com.cardScramble.scenes.game.data
 
 			var handScoreValue:int = ScoreTable.handIntToScoreValue(_winningHand.hand) * _scoreMultiplier;
 			_tweenObj.score = _score;
-			_score += handScoreValue;
+			updateScore(handScoreValue);
 			
 			_roundCount++;
 			
 			_handsAchieved.push(_winningHand);
 			_gridData.length = 0;
+			_gameBoardCards = [];
 			_scoreMultiplier = 1;
 			
-			TweenLite.to(_tweenObj, 1, {delay:2, score:_score, onUpdate:onScoreUpdate});
-			
 			dispatchEventWith(UPDATE, true, {type:ROUND_COMPLETE, score:handScoreValue, hand:HandLookup.handToString(_winningHand.hand), handInt:_winningHand.hand});
+		}
+		
+		public function updateScore(incrementAmount:int, tweenDelay:Number = 2):void{
+			
+			_score += incrementAmount;
+			TweenLite.to(_tweenObj, 1, {delay:tweenDelay, score:_score, onUpdate:onScoreUpdate});
 		}
 		
 		public function abortSelection():void{
@@ -103,19 +138,53 @@ package com.cardScramble.scenes.game.data
 			//stub
 		}
 		
-		override public function close():void{
-			_model.endScene();
+		public function powerUpActivated(powerUpType:String):void{
+			
+			for (var i:int = 0; i < _powerUps.length; i++) {
+				
+				var powerUp:StoreItemVO = _powerUps[i];
+				
+				if(powerUp.itemType == powerUpType){
+					
+					powerUp.quantity--;
+					
+					if(powerUp.quantity == 0){
+						
+						_powerUps.splice(i, 1);
+					}	
+				}	
+			}	
 		}
-		
-		
-		
+
 		//================ PRIVATE METHODS =================//
 		
 		private function onScoreUpdate():void{
 			dispatchEventWith(UPDATE, true, {type:UPDATE_SCORE, score:int(_tweenObj.score)});
 		}
 		
-		
+		private function initPowerUps():Vector.<StoreItemVO>{
+			
+			var powerUps:Vector.<StoreItemVO> = new Vector.<StoreItemVO>;
+			
+			var len:int = _model.sharedObject.data.inventory.length;
+			
+			for (var i:int = 0; i < len; i++) {
+				
+				var item:Object = _model.sharedObject.data.inventory[i];
+				var storeItemVO:StoreItemVO = new StoreItemVO();
+				
+				storeItemVO.price = item.price;
+				storeItemVO.quantity = item.quantity;
+				storeItemVO.itemType = item.itemType;
+				
+				for (var j:* in item) trace(j+" = "+item[j]);
+
+				
+				powerUps.push(storeItemVO);
+			}
+			
+			return powerUps;
+		}
 		
 		//================ EVENT HANDLERS =================//
 		
@@ -140,6 +209,8 @@ package com.cardScramble.scenes.game.data
 		public function get scoreMultiplier():int { return _scoreMultiplier; }
 		public function set scoreMultiplier(value:int):void { _scoreMultiplier = value; }
 		
+		public function get gameBoardCards():Array { return _gameBoardCards; }
+		
 		public function get gridData():Vector.<GridPositionVO> { return _gridData; }
 		
 		public function get handsAchieved():Vector.<HandVO> { return _handsAchieved; }
@@ -149,6 +220,8 @@ package com.cardScramble.scenes.game.data
 		public function get score():int { return _score; }
 		
 		public function get roundCount():int { return _roundCount; }
+		
+		public function get powerUps():Vector.<StoreItemVO> { return _powerUps; }
 
 	}
 }

@@ -2,12 +2,18 @@ package com.cardScramble.scenes.results {
 	
 	import com.abacus.core.ISceneData;
 	import com.abacus.scenes.results.Results;
+	import com.cardScramble.hud.Hud;
 	import com.cardScramble.utils.PokerConsts;
 	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
 	
+	import starling.core.Starling;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	import starling.utils.HAlign;
 	
@@ -18,6 +24,9 @@ package com.cardScramble.scenes.results {
 		
 		[Embed(source = "../../../../assets/fonts/JandaManateeSolid.png")]
 		public static const FontTexture:Class;	
+		
+		//global
+		private var _hud:Hud = Hud.getInstance();
 		
 		//assets
 		private var _bg:Image;
@@ -32,6 +41,9 @@ package com.cardScramble.scenes.results {
 		private var _resultsAchieved:TextField;
 		private var _totalScore:TextField;
 		
+		//buttons
+		private var _storeButton:Image;
+		
 		public function CardScrambleResults(){
 			super();
 		}
@@ -40,13 +52,16 @@ package com.cardScramble.scenes.results {
 			
 			_data = data as CardScrambleResultsData;
 			
-			initListeners();
+			_hud.hideHud();
+			
 			initAssets();
+			initListeners();
 			animateAssets();
 		}
 		
 		private function initListeners():void{
 			_data.addEventListener(CardScrambleResultsData.UPDATE, onResultsDataUpdate);
+			_storeButton.addEventListener(TouchEvent.TOUCH, onStoreButton);
 		}
 		
 		private function initAssets():void{
@@ -61,7 +76,7 @@ package com.cardScramble.scenes.results {
 			_scoreContainer = new Sprite();
 			addChild(_scoreContainer);
 			
-			var yVal:int = 48;
+			var yVal:int = 38;
 			var xSpacer:Boolean = false;
 			
 			for (var i:int = 0; i < PokerConsts.NUM_HAND_TYPES; i++) {
@@ -98,7 +113,7 @@ package com.cardScramble.scenes.results {
 			_resultsText.fontName = "JandaManateeSolid";
 			_resultsText.hAlign = HAlign.CENTER;
 			_resultsText.x = -40;
-			_resultsText.y = 480;
+			_resultsText.y = 452;
 			_resultsText.scaleX = _resultsText.scaleY = 1.5;
 			_resultsText.touchable = false;
 			addChild(_resultsText);
@@ -107,7 +122,7 @@ package com.cardScramble.scenes.results {
 			_resultsAchieved = new TextField(250, 50, String(_data.totalHandsAcheived), "JandaManateeSolid", 30, 0xFFFFFF);
 			_resultsAchieved.fontName = "JandaManateeSolid";
 			_resultsAchieved.x = 315;
-			_resultsAchieved.y = 480;
+			_resultsAchieved.y = 452;
 			_resultsAchieved.scaleX = _resultsAchieved.scaleY = 1.5;
 			_resultsAchieved.touchable = false;
 			_resultsAchieved.alpha = 0;
@@ -117,11 +132,20 @@ package com.cardScramble.scenes.results {
 			_totalScore = new TextField(250, 50, String(_data.totalScore), "JandaManateeSolid", 30, 0xFFFFFF);
 			_totalScore.fontName = "JandaManateeSolid";
 			_totalScore.x = 465;
-			_totalScore.y = 480;
+			_totalScore.y = 452;
 			_totalScore.scaleX = _totalScore.scaleY = 1.5;
 			_totalScore.touchable = false;
 			_totalScore.alpha = 0;
 			addChild(_totalScore);
+			
+			//buttons
+			_storeButton = new Image(_assets.getTexture("storeButton"));
+			_storeButton.pivotX = _storeButton.width/2;
+			_storeButton.pivotY = _storeButton.height/2;
+			_storeButton.x = Starling.current.stage.stageWidth - _storeButton.width/2;
+			_storeButton.y = Starling.current.stage.stageHeight - _storeButton.height/2;
+			_storeButton.alpha = 0;
+			addChild(_storeButton);
 
 		}
 		
@@ -164,6 +188,7 @@ package com.cardScramble.scenes.results {
 			
 			function onTotalScoreComplete():void{
 				TweenLite.to(_totalScore, 0.25, {alpha:1, x:_totalScore.x + 15, scaleX:1.5, scaleY:1.5});
+				TweenLite.to(_storeButton, 0.5, {delay:0.5, alpha:1});
 			}
 		}
 		
@@ -189,14 +214,47 @@ package com.cardScramble.scenes.results {
 				case CardScrambleResultsData.SCORES_UPDATE:
 					
 					var tweenObj:Object = e.data.tweenObj;
+					
 					for (var score:Number in tweenObj){
-						trace("score: " + score + ": " + tweenObj[score]);
+						//trace("score: " + score + ": " + tweenObj[score]);
 						var scoreText:TextField = _scoreContainer.getChildAt(score) as TextField;
 						scoreText.text = String(int(tweenObj[score]));
 					}
 	
 					break;	
 			}	
+		}
+		
+		
+		private function onStoreButton(e:TouchEvent):void{
+			
+			var touchBegan:Touch = e.getTouch(this, TouchPhase.BEGAN);
+			var touchHover:Touch = e.getTouch(this, TouchPhase.HOVER);
+			var touchEnded:Touch = e.getTouch(this, TouchPhase.ENDED);
+			
+			//touch began
+			if(touchBegan){
+				var storeButtonBegan:Image = e.target as Image;
+				TweenLite.to(storeButtonBegan, 0.01, {scaleX:0.95, scaleY:0.95, ease:Expo.easeOut});
+			}
+			
+			//mouse over and mouse out
+			if(touchHover){
+				var storeButtonHover:Image = e.target as Image;
+				TweenLite.to(storeButtonHover, 0.25, {scaleX:1.05, scaleY:1.05, ease:Expo.easeOut});
+				
+			} else {
+				var storeButtonOut:Image = e.target as Image;
+				TweenLite.to(storeButtonOut, 0.25, {scaleX:1, scaleY:1, ease:Expo.easeOut});
+			}
+			
+			//ended
+			if(touchEnded){
+				var storeButtonEnded:Image = e.target as Image;
+				TweenLite.to(storeButtonEnded, 0.01, {scaleX:1.05, scaleY:1.05, ease:Expo.easeOut});
+				_data.close();
+			}
+			
 		}
 		
 	}

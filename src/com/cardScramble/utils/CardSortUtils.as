@@ -27,13 +27,29 @@ package com.cardScramble.utils
 						if(cardVO.value == VALUE_ORDER[i] && cardVO.suit == SUIT_ORDER[j]){
 							sortedHand.push(cardVO);
 							unsortedHand.splice(k, 1);
-							trace("cardVO.value: " + cardVO.value + " cardVO.suit: " + cardVO.suit);
+							//trace("cardVO.value: " + cardVO.value + " cardVO.suit: " + cardVO.suit);
 						}
 					}
 				}
 			}
 			
 			return sortedHand;
+		}
+		
+		public static function cardCompare(cardA:CardVO, cardB:CardVO):Number {
+			if(VALUE_ORDER.indexOf(cardA.value) > VALUE_ORDER.indexOf(cardB.value)) {
+				return 1
+			} else if(VALUE_ORDER.indexOf(cardA.value) < VALUE_ORDER.indexOf(cardB.value)) {
+				return -1
+			} else {
+				if(SUIT_ORDER.indexOf(cardA.suit) > SUIT_ORDER.indexOf(cardB.suit)) {
+					return 1
+				} else if(SUIT_ORDER.indexOf(cardA.suit) < SUIT_ORDER.indexOf(cardB.suit)) {
+					return -1
+				} else {
+					return 0;  // identical card
+				}
+			}
 		}
 		
 		public static function sortHandByHighCardInHand(unsortedCards:Vector.<CardVO>):Vector.<CardVO>{

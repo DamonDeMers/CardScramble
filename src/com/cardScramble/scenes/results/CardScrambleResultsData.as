@@ -47,7 +47,7 @@ package com.cardScramble.scenes.results
 		}
 		
 		override public function close():void{
-			//stub
+			_model.endScene();
 		}
 		
 		

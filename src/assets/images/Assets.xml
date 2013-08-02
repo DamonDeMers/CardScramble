@@ -1,68 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:18ea591d6b6f4708b2d7cf0c2ac5eadc$ -->
+<!-- $TexturePacker:SmartUpdate:d61477e9339156ba1625e1f2fe477a0f$ -->
 <TextureAtlas imagePath="Assets.png">
-    <SubTexture name="10B" x="1694" y="338" width="37" height="32"/>
-    <SubTexture name="10R" x="1606" y="388" width="37" height="32"/>
-    <SubTexture name="2B" x="1781" y="460" width="21" height="32"/>
-    <SubTexture name="2R" x="1906" y="546" width="21" height="32"/>
-    <SubTexture name="3B" x="1883" y="546" width="21" height="32"/>
-    <SubTexture name="3R" x="1906" y="512" width="21" height="32"/>
-    <SubTexture name="4B" x="1838" y="392" width="26" height="32"/>
-    <SubTexture name="4R" x="1810" y="392" width="26" height="32"/>
-    <SubTexture name="5B" x="1883" y="512" width="21" height="32"/>
-    <SubTexture name="5R" x="1906" y="478" width="21" height="32"/>
-    <SubTexture name="6B" x="1833" y="426" width="24" height="32"/>
-    <SubTexture name="6R" x="1807" y="426" width="24" height="32"/>
-    <SubTexture name="7B" x="1907" y="444" width="22" height="32"/>
-    <SubTexture name="7R" x="1883" y="444" width="22" height="32"/>
-    <SubTexture name="8B" x="1781" y="426" width="24" height="32"/>
-    <SubTexture name="8R" x="1735" y="424" width="24" height="32"/>
-    <SubTexture name="9B" x="1709" y="424" width="24" height="32"/>
-    <SubTexture name="9R" x="1894" y="410" width="24" height="32"/>
-    <SubTexture name="AB" x="1645" y="390" width="32" height="32"/>
-    <SubTexture name="AR" x="1694" y="372" width="32" height="32"/>
-    <SubTexture name="JB" x="1883" y="478" width="21" height="32"/>
-    <SubTexture name="JR" x="1759" y="390" width="21" height="32"/>
-    <SubTexture name="KB" x="1728" y="390" width="29" height="32"/>
-    <SubTexture name="KR" x="1606" y="422" width="29" height="32"/>
-    <SubTexture name="QB" x="1782" y="392" width="26" height="32"/>
-    <SubTexture name="QR" x="1606" y="456" width="26" height="32"/>
-    <SubTexture name="bg" x="2" y="813" width="800" height="580"/>
+    <SubTexture name="10B" x="1767" y="576" width="37" height="32"/>
+    <SubTexture name="10R" x="1808" y="574" width="37" height="32"/>
+    <SubTexture name="2B" x="1790" y="676" width="21" height="32"/>
+    <SubTexture name="2R" x="1859" y="652" width="21" height="32"/>
+    <SubTexture name="3B" x="1836" y="652" width="21" height="32"/>
+    <SubTexture name="3R" x="1813" y="642" width="21" height="32"/>
+    <SubTexture name="4B" x="1782" y="484" width="26" height="32"/>
+    <SubTexture name="4R" x="1782" y="450" width="26" height="32"/>
+    <SubTexture name="5B" x="1767" y="644" width="21" height="32"/>
+    <SubTexture name="5R" x="1790" y="642" width="21" height="32"/>
+    <SubTexture name="6B" x="2018" y="655" width="24" height="32"/>
+    <SubTexture name="6R" x="1966" y="671" width="24" height="32"/>
+    <SubTexture name="7B" x="1992" y="689" width="22" height="32"/>
+    <SubTexture name="7R" x="1874" y="618" width="22" height="32"/>
+    <SubTexture name="8B" x="1992" y="655" width="24" height="32"/>
+    <SubTexture name="8R" x="1898" y="649" width="24" height="32"/>
+    <SubTexture name="9B" x="1966" y="637" width="24" height="32"/>
+    <SubTexture name="9R" x="1782" y="542" width="24" height="32"/>
+    <SubTexture name="AB" x="1840" y="618" width="32" height="32"/>
+    <SubTexture name="AR" x="1806" y="608" width="32" height="32"/>
+    <SubTexture name="JB" x="1767" y="610" width="21" height="32"/>
+    <SubTexture name="JR" x="2016" y="689" width="21" height="32"/>
+    <SubTexture name="KB" x="1967" y="603" width="29" height="32"/>
+    <SubTexture name="KR" x="1936" y="603" width="29" height="32"/>
+    <SubTexture name="QB" x="1782" y="416" width="26" height="32"/>
+    <SubTexture name="QR" x="1782" y="382" width="26" height="32"/>
+    <SubTexture name="bg" x="804" y="584" width="800" height="580"/>
+    <SubTexture name="buyBox" x="1606" y="164" width="202" height="216" frameX="-4" frameY="-6" frameWidth="216" frameHeight="236"/>
+    <SubTexture name="buyButton" x="1810" y="164" width="124" height="52" frameX="-6" frameY="-7" frameWidth="130" frameHeight="60"/>
     <SubTexture name="card" x="1950" y="2" width="94" height="124" frameX="-7" frameY="-9" frameWidth="106" frameHeight="140"/>
-    <SubTexture name="cardBack" x="1940" y="455" width="92" height="122" frameX="-7" frameY="-9" frameWidth="106" frameHeight="140"/>
+    <SubTexture name="cardBack" x="1948" y="378" width="92" height="122" frameX="-7" frameY="-9" frameWidth="106" frameHeight="140"/>
     <SubTexture name="cardSelectOutline" x="1950" y="128" width="92" height="122" frameX="-8" frameY="-9" frameWidth="106" frameHeight="140"/>
-    <SubTexture name="cardShadow" x="1782" y="266" width="98" height="124" frameX="-7" frameY="-13" frameWidth="106" frameHeight="140"/>
-    <SubTexture name="club" x="1882" y="318" width="48" height="46" frameX="-7" frameY="-7" frameWidth="60" frameHeight="60"/>
-    <SubTexture name="coin_01" x="1882" y="266" width="48" height="50" frameX="-2" frameY="-1" frameWidth="52" frameHeight="52"/>
-    <SubTexture name="coin_02" x="1884" y="214" width="48" height="50" frameX="-1" frameY="-1" frameWidth="52" frameHeight="52"/>
-    <SubTexture name="coin_03" x="1733" y="338" width="36" height="50" frameX="-5" frameY="-1" frameWidth="52" frameHeight="52"/>
-    <SubTexture name="coin_04" x="1637" y="424" width="28" height="50" frameX="-12" frameY="-1" frameWidth="52" frameHeight="52"/>
-    <SubTexture name="coin_05" x="1804" y="460" width="20" height="50" frameX="-17" frameY="-1" frameWidth="52" frameHeight="52"/>
+    <SubTexture name="cardShadow" x="1948" y="252" width="98" height="124" frameX="-7" frameY="-13" frameWidth="106" frameHeight="140"/>
+    <SubTexture name="club" x="1860" y="474" width="48" height="46" frameX="-7" frameY="-7" frameWidth="60" frameHeight="60"/>
+    <SubTexture name="coin_01" x="1810" y="472" width="48" height="50" frameX="-2" frameY="-1" frameWidth="52" frameHeight="52"/>
+    <SubTexture name="coin_02" x="1862" y="422" width="48" height="50" frameX="-1" frameY="-1" frameWidth="52" frameHeight="52"/>
+    <SubTexture name="coin_03" x="1898" y="597" width="36" height="50" frameX="-5" frameY="-1" frameWidth="52" frameHeight="52"/>
+    <SubTexture name="coin_04" x="1936" y="637" width="28" height="50" frameX="-12" frameY="-1" frameWidth="52" frameHeight="52"/>
+    <SubTexture name="coin_05" x="1813" y="676" width="20" height="50" frameX="-17" frameY="-1" frameWidth="52" frameHeight="52"/>
     <SubTexture name="coin_06" x="1936" y="164" width="12" height="50" frameX="-21" frameY="-1" frameWidth="52" frameHeight="52"/>
-    <SubTexture name="coin_07" x="1932" y="407" width="6" height="52" frameX="-23" frameY="0" frameWidth="52" frameHeight="52"/>
-    <SubTexture name="coin_08" x="1932" y="355" width="10" height="50" frameX="-21" frameY="-1" frameWidth="52" frameHeight="52"/>
-    <SubTexture name="coin_09" x="1761" y="424" width="18" height="50" frameX="-17" frameY="-1" frameWidth="52" frameHeight="52"/>
-    <SubTexture name="coin_10" x="1679" y="406" width="28" height="50" frameX="-12" frameY="-1" frameWidth="52" frameHeight="52"/>
-    <SubTexture name="coin_11" x="1654" y="338" width="38" height="50" frameX="-7" frameY="-1" frameWidth="52" frameHeight="52"/>
-    <SubTexture name="connector" x="1934" y="216" width="10" height="137"/>
-    <SubTexture name="diamond" x="1884" y="164" width="50" height="48" frameX="-5" frameY="-5" frameWidth="60" frameHeight="60"/>
+    <SubTexture name="coin_07" x="1936" y="407" width="6" height="52" frameX="-23" frameY="0" frameWidth="52" frameHeight="52"/>
+    <SubTexture name="coin_08" x="1936" y="355" width="10" height="50" frameX="-21" frameY="-1" frameWidth="52" frameHeight="52"/>
+    <SubTexture name="coin_09" x="2028" y="603" width="18" height="50" frameX="-17" frameY="-1" frameWidth="52" frameHeight="52"/>
+    <SubTexture name="coin_10" x="1998" y="603" width="28" height="50" frameX="-12" frameY="-1" frameWidth="52" frameHeight="52"/>
+    <SubTexture name="coin_11" x="1858" y="566" width="38" height="50" frameX="-7" frameY="-1" frameWidth="52" frameHeight="52"/>
+    <SubTexture name="connector" x="1936" y="216" width="10" height="137"/>
+    <SubTexture name="diamond" x="1810" y="422" width="50" height="48" frameX="-5" frameY="-5" frameWidth="60" frameHeight="60"/>
     <SubTexture name="flushText" x="1606" y="2" width="342" height="160" frameX="-222" frameY="-121" frameWidth="798" frameHeight="400"/>
-    <SubTexture name="fourOfAKindText" x="2" y="1887" width="764" height="154" frameX="-23" frameY="-126" frameWidth="798" frameHeight="400"/>
-    <SubTexture name="fullHouseText" x="1238" y="584" width="596" height="160" frameX="-92" frameY="-121" frameWidth="798" frameHeight="400"/>
-    <SubTexture name="heart" x="1882" y="366" width="48" height="42" frameX="-6" frameY="-11" frameWidth="60" frameHeight="60"/>
-    <SubTexture name="hold3Chip" x="1946" y="354" width="100" height="99"/>
-    <SubTexture name="musicNoteIcon" x="1826" y="460" width="20" height="25"/>
-    <SubTexture name="resultsBg" x="804" y="2" width="800" height="580"/>
-    <SubTexture name="rewardBanner" x="2" y="1395" width="800" height="490" frameX="0" frameY="-57" frameWidth="800" frameHeight="580"/>
-    <SubTexture name="rewardBg" x="2" y="2" width="800" height="580"/>
-    <SubTexture name="royalFlushText" x="508" y="584" width="728" height="204" frameX="-42" frameY="-120" frameWidth="798" frameHeight="400"/>
-    <SubTexture name="score2xChip" x="1946" y="252" width="100" height="100"/>
-    <SubTexture name="shuffleChip" x="1782" y="164" width="100" height="100"/>
-    <SubTexture name="spade" x="1606" y="338" width="46" height="48" frameX="-7" frameY="-5" frameWidth="60" frameHeight="60"/>
-    <SubTexture name="sparkle" x="1606" y="164" width="174" height="172" frameX="-10" frameY="-10" frameWidth="208" frameHeight="208"/>
-    <SubTexture name="speakerIcon" x="1866" y="410" width="26" height="22"/>
-    <SubTexture name="straightFlushText" x="804" y="790" width="762" height="194" frameX="-21" frameY="-127" frameWidth="798" frameHeight="400"/>
-    <SubTexture name="straightText" x="2" y="584" width="504" height="206" frameX="-132" frameY="-119" frameWidth="798" frameHeight="400"/>
-    <SubTexture name="timer" x="1859" y="434" width="22" height="377"/>
+    <SubTexture name="fourOfAKindText" x="1238" y="1166" width="764" height="154" frameX="-23" frameY="-126" frameWidth="798" frameHeight="400"/>
+    <SubTexture name="fullHouseText" x="804" y="1518" width="596" height="160" frameX="-92" frameY="-121" frameWidth="798" frameHeight="400"/>
+    <SubTexture name="heart" x="1860" y="522" width="48" height="42" frameX="-6" frameY="-11" frameWidth="60" frameHeight="60"/>
+    <SubTexture name="hold3Chip" x="1936" y="502" width="100" height="99"/>
+    <SubTexture name="musicNoteIcon" x="1882" y="683" width="20" height="25"/>
+    <SubTexture name="playAgainButton" x="1606" y="606" width="159" height="48" frameX="-6" frameY="-11" frameWidth="167" frameHeight="62"/>
+    <SubTexture name="resultsBg" x="2" y="723" width="800" height="580"/>
+    <SubTexture name="rewardBanner" x="2" y="1305" width="800" height="490" frameX="0" frameY="-57" frameWidth="800" frameHeight="580"/>
+    <SubTexture name="rewardBg" x="804" y="2" width="800" height="580"/>
+    <SubTexture name="royalFlushText" x="508" y="1797" width="728" height="204" frameX="-42" frameY="-120" frameWidth="798" frameHeight="400"/>
+    <SubTexture name="score2xChip" x="1810" y="320" width="100" height="100"/>
+    <SubTexture name="shuffleChip" x="1810" y="218" width="100" height="100"/>
+    <SubTexture name="spade" x="1810" y="524" width="46" height="48" frameX="-7" frameY="-5" frameWidth="60" frameHeight="60"/>
+    <SubTexture name="sparkle" x="1606" y="382" width="174" height="172" frameX="-10" frameY="-10" frameWidth="208" frameHeight="208"/>
+    <SubTexture name="speakerIcon" x="1782" y="518" width="26" height="22"/>
+    <SubTexture name="storeBg" x="2" y="2" width="800" height="580"/>
+    <SubTexture name="storeButton" x="1606" y="556" width="159" height="48" frameX="-6" frameY="-11" frameWidth="167" frameHeight="62"/>
+    <SubTexture name="straightFlushText" x="1238" y="1322" width="762" height="194" frameX="-21" frameY="-127" frameWidth="798" frameHeight="400"/>
+    <SubTexture name="straightText" x="2" y="1797" width="504" height="206" frameX="-132" frameY="-119" frameWidth="798" frameHeight="400"/>
+    <SubTexture name="timer" x="1912" y="218" width="22" height="377"/>
 </TextureAtlas>

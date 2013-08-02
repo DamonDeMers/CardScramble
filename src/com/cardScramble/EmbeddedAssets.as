@@ -1,7 +1,6 @@
 package com.cardScramble
 {
-	public class EmbeddedAssets
-	{
+	public class EmbeddedAssets{
 		
 		//images
 		[Embed(source = "../../assets/images/Assets.png")]
@@ -66,6 +65,9 @@ package com.cardScramble
 		[Embed(source = "../../assets/sounds/registerRing1.mp3")]
 		public static const RegisterRing1:Class;
 		
+		[Embed(source = "../../assets/sounds/registerRing2.mp3")]
+		public static const RegisterRing2:Class;
+		
 		[Embed(source = "../../assets/sounds/selectionComplete.mp3")]
 		public static const SelectionComplete:Class;
 		
@@ -78,5 +80,7 @@ package com.cardScramble
 		
 		public function EmbeddedAssets(){
 		}
+		
+		
 	}
 }

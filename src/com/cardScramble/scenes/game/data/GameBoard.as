@@ -1,8 +1,8 @@
 package com.cardScramble.scenes.game.data
 {
 	import com.abacus.assetManager.AssetManager;
+	import com.cardScramble.hud.Hud;
 	import com.cardScramble.scenes.game.Card;
-	import com.cardScramble.scenes.game.CardScrambleGame;
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
 	
@@ -32,10 +32,13 @@ package com.cardScramble.scenes.game.data
 		
 		
 		public function GameBoard(data:CardScrambleGameData){
+			
 			_data = data;
 			
 			initAssets();
 			activate();
+			
+			trace("Num cards: " + _cardContainer.numChildren);
 		}
 
 		
@@ -50,14 +53,15 @@ package com.cardScramble.scenes.game.data
 			}
 			
 			_cardsCopy = _data.cardNames.slice(0, _data.cardNames.length-1);
+			
 			var xVal:Number = 0;
 			var yVal:Number = 0;
 			var revealDelay:Number = 0;
 			
 			
-			for (var i:int = 0; i < _data.NUM_CARDS_VERTICAL; i++) {
+			for (var i:int = 0; i < _data.NUM_CARDS_HORIZONTAL; i++) {
 				
-				for (var j:int = 0; j < _data.NUM_CARDS_HORIZONTAL; j++) {
+				for (var j:int = 0; j < _data.NUM_CARDS_VERTICAL; j++) {
 					
 					var ranNum:int = Math.random() * _cardsCopy.length;
 					var cardString:String = _cardsCopy[ranNum];
@@ -88,14 +92,17 @@ package com.cardScramble.scenes.game.data
 					_data.cardDict[card] = cardVO;
 					_cardsCopy.splice(ranNum, 1);
 					
-					xVal += card.cardWidth + 10;
+					//xVal += card.cardWidth + 10;
+					yVal += card.cardHeight + 25;
 					
 					card.reveal(revealDelay);
 					revealDelay += 0.1;
+					
+					_data.gameBoardCards.push(cardVO);
 				}
 				
-				xVal = 0;
-				yVal += card.cardHeight + 25;
+				xVal += card.cardWidth + 10;
+				yVal = 0;
 			}
 		}
 		
@@ -146,7 +153,12 @@ package com.cardScramble.scenes.game.data
 			_clickMode = true;
 		}
 		
-		
+		public function reset():void{
+			
+			while(_cardContainer.numChildren > 0){
+				_cardContainer.removeChildAt(0);
+			}
+		}
 		
 		
 		//================== PRIVATE METHODS ==================//
@@ -223,6 +235,7 @@ package com.cardScramble.scenes.game.data
 			var touchEnded:Touch = e.getTouch(this, TouchPhase.ENDED);
 			
 			if(!_clickMode){
+				
 				if(touchMoved){
 					
 					MOUSE_POINT.x = touchMoved.globalX;
@@ -242,7 +255,7 @@ package com.cardScramble.scenes.game.data
 							
 							_data.cardSelected.push(cardVO);
 							
-							_assets.playSound(String("CardSelect" + _data.cardSelected.length), 0, 0, CardScrambleGame.ST_SOUND_FX);
+							_assets.playSound(String("CardSelect" + _data.cardSelected.length), 0, 0, Hud.ST_SOUND_FX);
 							
 							if(_data.cardSelected.length > 1){
 								
@@ -269,9 +282,10 @@ package com.cardScramble.scenes.game.data
 						targetCard.unselected();
 					}
 					
-					_assets.playSound("DropHand", 0, 0, CardScrambleGame.ST_SOUND_FX);
+					_assets.playSound("DropHand", 0, 0, Hud.ST_SOUND_FX);
 					_data.abortSelection();
 				}
+				
 			} else {
 				
 				if(touchBegan){
@@ -285,7 +299,6 @@ package com.cardScramble.scenes.game.data
 						shuffleAndKeep(_heldCards);
 					}
 				}
-				
 			}
 			
 		}

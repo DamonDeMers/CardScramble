@@ -19,9 +19,9 @@ package com.cardScramble.scenes.game
 		public static const UPDATE:String = "update";
 		
 		//power up types
-		public static const SHUFFLE:String = "shuffle";
-		public static const HOLD3:String = "hold3";
-		public static const SCORE2X:String = "score2x";
+		public static const SHUFFLE:String = "shuffleChip";
+		public static const HOLD3:String = "hold3Chip";
+		public static const SCORE2X:String = "score2xChip";
 		
 		//global
 		private var _assets:AssetManager = AssetManager.getInstance();
