@@ -2,8 +2,9 @@ package com.cardScramble.scenes.game.data
 {
 	import com.abacus.core.SceneData;
 	import com.cardScramble.core.CardScrambleModel;
-	import com.cardScramble.scenes.store.Store;
+	import com.cardScramble.scenes.game.RewardSequencer;
 	import com.cardScramble.scenes.store.data.StoreItemVO;
+	import com.cardScramble.utils.BoardEvaluator;
 	import com.cardScramble.utils.CardSortUtils;
 	import com.cardScramble.utils.HandEvaluator;
 	import com.cardScramble.utils.HandLookup;
@@ -54,6 +55,7 @@ package com.cardScramble.scenes.game.data
 		private var _tweenObj:Object = new Object;
 		private var _roundCount:int = 0;
 		private var _powerUps:Vector.<StoreItemVO> = new Vector.<StoreItemVO>;
+		private var _highestPossibleHand:Boolean = false;
 		
 		//view data
 		private var _gridData:Vector.<GridPositionVO> = new Vector.<GridPositionVO>;
@@ -61,6 +63,8 @@ package com.cardScramble.scenes.game.data
 		//timers
 		private var _countdownTimer:Timer;
 		
+		//utils
+		private var _boardEval:BoardEvaluator = new BoardEvaluator();
 		
 		
 		public function CardScrambleGameData(){
@@ -70,9 +74,10 @@ package com.cardScramble.scenes.game.data
 		
 		//================ PUBLIC METHODS =================//
 
+
 		override public function init():void{
 			
-			_countdownTimer = new Timer(1000, 5);
+			_countdownTimer = new Timer(1000, 180);
 			_cardsSelected = new Vector.<CardVO>;
 			_handsAchieved = new Vector.<HandVO>;
 			
@@ -84,6 +89,7 @@ package com.cardScramble.scenes.game.data
 			_countdownTimer.addEventListener(TimerEvent.TIMER, onCountdownTimer);
 			_countdownTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onCountdownTimerComplete);
 			_countdownTimer.start();
+			
 		}
 
 		override public function close():void{
@@ -108,8 +114,26 @@ package com.cardScramble.scenes.game.data
 			
 			_cardsSelected = CardSortUtils.sortCardByHighCardSelected(_cardsSelected);
 			_winningHand = _handEvaluator.evaluate(_cardsSelected);
-
+			
 			var handScoreValue:int = ScoreTable.handIntToScoreValue(_winningHand.hand) * _scoreMultiplier;
+			
+			
+			if(_boardEval.highHandInt == _winningHand.hand){
+				
+				if(_boardEval.highCard == String(_winningHand.highCardSelected.suit + _winningHand.highCardSelected.value)){
+					
+					_highestPossibleHand = true;
+					
+					if(_boardEval.highHandInt >= RewardSequencer.SPECIAL_SEQUENCE_THRESHOLD){
+						handScoreValue += 5000;
+					}
+					
+				}
+			} else {
+				
+				_highestPossibleHand = false
+			}
+
 			_tweenObj.score = _score;
 			updateScore(handScoreValue);
 			
@@ -119,11 +143,12 @@ package com.cardScramble.scenes.game.data
 			_gridData.length = 0;
 			_gameBoardCards = [];
 			_scoreMultiplier = 1;
+			_cardsSelected.length = 0;
 			
-			dispatchEventWith(UPDATE, true, {type:ROUND_COMPLETE, score:handScoreValue, hand:HandLookup.handToString(_winningHand.hand), handInt:_winningHand.hand});
+			dispatchEventWith(UPDATE, true, {type:ROUND_COMPLETE, score:handScoreValue, hand:HandLookup.handToString(_winningHand.hand), handInt:_winningHand.hand, highHand:_highestPossibleHand});
 		}
 		
-		public function updateScore(incrementAmount:int, tweenDelay:Number = 2):void{
+		public function updateScore(incrementAmount:int, tweenDelay:Number = 3):void{
 			
 			_score += incrementAmount;
 			TweenLite.to(_tweenObj, 1, {delay:tweenDelay, score:_score, onUpdate:onScoreUpdate});
@@ -140,6 +165,7 @@ package com.cardScramble.scenes.game.data
 		
 		public function powerUpActivated(powerUpType:String):void{
 			
+			
 			for (var i:int = 0; i < _powerUps.length; i++) {
 				
 				var powerUp:StoreItemVO = _powerUps[i];
@@ -152,8 +178,11 @@ package com.cardScramble.scenes.game.data
 						
 						_powerUps.splice(i, 1);
 					}	
-				}	
-			}	
+				}
+				
+			}
+			
+			_boardEval.getHighestHand(_gameBoardCards);
 		}
 
 		//================ PRIVATE METHODS =================//
@@ -222,6 +251,8 @@ package com.cardScramble.scenes.game.data
 		public function get roundCount():int { return _roundCount; }
 		
 		public function get powerUps():Vector.<StoreItemVO> { return _powerUps; }
+		
+		public function get boardEval():BoardEvaluator { return _boardEval; }
 
 	}
 }

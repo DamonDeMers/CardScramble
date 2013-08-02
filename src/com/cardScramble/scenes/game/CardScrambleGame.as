@@ -55,9 +55,6 @@ package com.cardScramble.scenes.game
 		//sounds
 		private var _stBgMusic:SoundTransform;
 		
-		//utils
-		private var _boardEval:BoardEvaluator = new BoardEvaluator();
-		
 		
 		
 		public function CardScrambleGame(){
@@ -107,8 +104,7 @@ package com.cardScramble.scenes.game
 			initPowerUps();
 			
 			_gameBoard.newHand();
-			
-			_boardEval.getHighestHand(_data.gameBoardCards);
+			_data.boardEval.getHighestHand(_data.gameBoardCards);
 		}
 		
 		private function initPowerUps():void{
@@ -118,10 +114,8 @@ package com.cardScramble.scenes.game
 			for (var i:int = 0; i < len; i++) {
 				
 				var storeItemVO:StoreItemVO = _data.powerUps[i] as StoreItemVO;
-				
-				_powerUps.add(storeItemVO.itemType);
+				_powerUps.add(storeItemVO);
 			}
-			
 		}
 		
 		
@@ -142,8 +136,13 @@ package com.cardScramble.scenes.game
 		
 		override public function close():void{
 			
+			_data.removeEventListener(CardScrambleGameData.UPDATE, onModelUpdate);
+			_powerUps.removeEventListener(PowerUps.UPDATE, onPowerUpUpdate);
+			_rewardSequencer.removeEventListener(RewardSequencer.SEQUENCE_COMPLETE, onSequenceComplete);
+			
 			SoundMixer.stopAll();
 			_gameBoard.reset();
+			_powerUps.reset();
 		}
 		
 		
@@ -165,9 +164,6 @@ package com.cardScramble.scenes.game
 				case CardScrambleGameData.ROUND_COMPLETE:
 					_gameBoard.inactivate();
 					_rewardSequencer.createSequence(e.data, GameBoard.MOUSE_POINT);
-					if(_data.roundCount == 4){
-						_powerUps.add(PowerUpTypes.SHUFFLE);
-					}
 					break;
 				
 				case CardScrambleGameData.UPDATE_SCORE:
@@ -193,15 +189,28 @@ package com.cardScramble.scenes.game
 				case PowerUps.HOLD3:
 					_gameBoard.holdThree();
 					break;
+				
+				case PowerUps.ONE_COLOR:
+					_gameBoard.oneColor();
+					break;
+				
+				case PowerUps.SUPER_HAND:
+					_gameBoard.superHand();
+					break;
+				
+				case PowerUps.WILD_CARD:
+					_gameBoard.wildCard();
+					break;
 			}
 			
 			_data.powerUpActivated(type);
+			_data.boardEval.getHighestHand(_data.gameBoardCards);
 		}
 		
 		private function onSequenceComplete(e:Event):void{
 			
 			_data.MODE == 1 ? _gameBoard.newHand() : _gameBoard.resetHand();
-			_boardEval.getHighestHand(_data.gameBoardCards);
+			_data.boardEval.getHighestHand(_data.gameBoardCards);
 			_gameBoard.activate();
 		}
 		

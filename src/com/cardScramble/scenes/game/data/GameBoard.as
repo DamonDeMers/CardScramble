@@ -25,9 +25,11 @@ package com.cardScramble.scenes.game.data
 		//data
 		public static var MOUSE_POINT:Point = new Point();
 		private var _data:CardScrambleGameData;
-		private var _cardsCopy:Array
+		private var _cardsCopy:Array;
 		private var _prevCard:Card;
 		private var _clickMode:Boolean = false;
+		private var _oneColor:Boolean = false;
+		private var _superHand:Boolean = false;
 		private var _heldCards:Vector.<CardVO> = new Vector.<CardVO>;
 		
 		
@@ -52,7 +54,18 @@ package com.cardScramble.scenes.game.data
 				_cardContainer.removeChildAt(0);
 			}
 			
-			_cardsCopy = _data.cardNames.slice(0, _data.cardNames.length-1);
+			_cardsCopy = _data.cardNames.slice(0, _data.cardNames.length);
+			
+			//sort for one color boost
+			if(_oneColor){
+				_cardsCopy = oneColorCards();
+			}
+			
+			//sort for super hand boost
+			if(_superHand){
+				_cardsCopy = superHandCards();
+			}
+				
 			
 			var xVal:Number = 0;
 			var yVal:Number = 0;
@@ -104,6 +117,9 @@ package com.cardScramble.scenes.game.data
 				xVal += card.cardWidth + 10;
 				yVal = 0;
 			}
+			
+			_oneColor = false;
+			_superHand = false;
 		}
 		
 		public function resetHand():void{
@@ -150,7 +166,27 @@ package com.cardScramble.scenes.game.data
 		}
 		
 		public function holdThree():void{
+			
+			_data.gameBoardCards.length = 0;
 			_clickMode = true;
+		}
+		
+		public function oneColor():void{
+			
+			_data.gameBoardCards.length = 0;
+			_oneColor = true;
+			newHand();
+		}
+		
+		public function superHand():void{
+			
+			_data.gameBoardCards.length = 0;
+			_superHand = true;
+			newHand();
+		}
+		
+		public function wildCard():void{
+			trace("WILD CARD BITCHES!");
 		}
 		
 		public function reset():void{
@@ -225,6 +261,41 @@ package com.cardScramble.scenes.game.data
 			
 		}
 		
+		private function oneColorCards():Array{
+			
+			var ranSuitColor:String = (Math.random() > 0.5) ? "dh" : "sc"; //diamonds and hearts ... or spades and clubs
+			
+			for (var i:int = 0; i < _cardsCopy.length; i++) {
+				
+				var cardString:String = _cardsCopy[i];
+				
+				if(cardString.charAt(0) == ranSuitColor.charAt(0) || cardString.charAt(0) == ranSuitColor.charAt(1)){
+					_cardsCopy.splice(i, 1);
+					i--;
+				}
+			}			
+			
+			return _cardsCopy;
+		}
+		
+		private function superHandCards():Array{
+			
+			var highCards:Array = ["10", "j", "q", "k", "a"];
+			
+			for (var i:int = 0; i < _cardsCopy.length; i++) {
+				
+				var cardString:String = _cardsCopy[i];
+				var val:String = cardString.substr(1, cardString.length);
+				
+				if(highCards.indexOf(val) == -1){
+					
+					_cardsCopy.splice(i, 1);
+					i--;
+				}
+			}			
+			
+			return _cardsCopy;
+		}
 		
 		//================== EVENT HANDLERS ===================//
 		

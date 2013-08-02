@@ -14,11 +14,15 @@ package com.cardScramble.utils
 		private var evaluationData:Array;
 		private var _boardCards:Array = [];
 		
+		private var _highHandInt:int;
+		private var _highCard:String;
+		
 		public function BoardEvaluator(){
 			paths = Paths_5x3.paths;
 		}
 		
-		
+	
+
 		/**
 		 * Returns highest hand in any grid of cards
 		 * 
@@ -45,6 +49,7 @@ package com.cardScramble.utils
 			}
 			
 			showHighestHand();
+
 		}
 		
 		private function getHandCards(boardCards:Array):Array {
@@ -81,6 +86,7 @@ package com.cardScramble.utils
 				data = evaluationData[i];
 				if(data.length){
 					handName = HandLookup.handToString(i);
+					_highHandInt = i;
 					o = data.sort(sortHands).reverse()[0];
 					var card:Card;
 					for each(var k:int in o.spaceIndices) {
@@ -109,6 +115,9 @@ package com.cardScramble.utils
 			cards.sort(CardSortUtils.cardCompare);
 			for(i = 0; i < cards.length; i++) {
 				pHand.push(cards[i].value + cards[i].suit);
+				if(i == cards.length-1){
+					_highCard = cards[i].suit + cards[i].value;
+				}
 			}
 			return pHand.join(' ');
 		}
@@ -155,5 +164,17 @@ package com.cardScramble.utils
 		}
 		
 		
+		
+		//================ GETTERS AND SETTERS ==================//
+		
+		public function get highCard():String
+		{
+			return _highCard;
+		}
+		
+		public function get highHandInt():int
+		{
+			return _highHandInt;
+		}
 	}
 }

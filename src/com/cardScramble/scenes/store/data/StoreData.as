@@ -30,31 +30,33 @@ package com.cardScramble.scenes.store.data
 
 		override public function init():void{
 			
+			_inventory.length = 0;
+			
+			
 			//inventory items
 			var item1:StoreItemVO = new StoreItemVO();
 			item1.itemType = PowerUpTypes.SHUFFLE;
-			item1.price = 100;
+			item1.price = 5000;
 			
 			var item2:StoreItemVO = new StoreItemVO();
 			item2.itemType = PowerUpTypes.SCORE2X;
-			item2.price = 200;
+			item2.price = 15000;
 			
 			var item3:StoreItemVO = new StoreItemVO();
 			item3.itemType = PowerUpTypes.HOLD3;
-			item3.price = 300;
+			item3.price = 25000;
 			
-			//inventory items
 			var item4:StoreItemVO = new StoreItemVO();
-			item4.itemType = PowerUpTypes.SHUFFLE;
-			item4.price = 10000;
+			item4.itemType = PowerUpTypes.ONE_COLOR;
+			item4.price = 50000;
 			
 			var item5:StoreItemVO = new StoreItemVO();
-			item5.itemType = PowerUpTypes.SCORE2X;
-			item5.price = 20000;
+			item5.itemType = PowerUpTypes.SUPER_HAND;
+			item5.price = 75000;
 			
 			var item6:StoreItemVO = new StoreItemVO();
-			item6.itemType = PowerUpTypes.HOLD3;
-			item6.price = 30000;
+			item6.itemType = PowerUpTypes.WILD_CARD;
+			item6.price = 1000000;
 			
 			_storeItems.push(item1, item2, item3, item4, item5, item6);
 			updateInventory();

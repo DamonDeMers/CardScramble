@@ -38,7 +38,7 @@ package com.cardScramble.scenes.game
 		
 		//consts
 		public static const SEQUENCE_COMPLETE:String = "sequenceComplete";
-		private const SPECIAL_SEQUENCE_THRESHOLD:int = 4;
+		public static const SPECIAL_SEQUENCE_THRESHOLD:int = 4;
 		private const TIMER_BONUS_MAX_AMOUNT:int = 5000;
 		
 		//global
@@ -57,6 +57,9 @@ package com.cardScramble.scenes.game
 		private var _fourOfAKind:Image;
 		private var _straightFlush:Image;
 		private var _royalFlush:Image;
+		
+		private var _bestHand:Image;
+		private var _plusFiveThousand:Image;
 		
 		//text
 		private var _messageText:TextField;
@@ -121,6 +124,16 @@ package com.cardScramble.scenes.game
 			_royalFlush.x = -_royalFlush.width;
 			_royalFlush.y = _rewardBanner.y + 90;
 			addChild(_royalFlush);
+			
+			_bestHand = new Image(_assets.getTexture("bestHandText"));
+			_bestHand.x = -_bestHand.width;
+			_bestHand.y = _bestHand.y + 90;
+			addChild(_bestHand);
+			
+			_plusFiveThousand = new Image(_assets.getTexture("plus5000"));
+			_plusFiveThousand.x = -_plusFiveThousand.width;
+			_plusFiveThousand.y = _plusFiveThousand.y + 90;
+			addChild(_plusFiveThousand);
 			
 			
 			//message 1
@@ -235,6 +248,7 @@ package com.cardScramble.scenes.game
 			
 			//coins
 			var len:int = int(data.handInt * 2);
+			data.bestHand ? len += 10 : null; //add extra coins for best hand
 			for (var i:int = 0; i < len; i++) {
 				
 				//coin
@@ -262,11 +276,31 @@ package com.cardScramble.scenes.game
 				
 			} else {
 				
-				TweenLite.to(_bg, 0.25, {alpha:0});
-				TweenLite.to(_winningHandText, 0.5, {x:900, ease:Expo.easeIn, onComplete:onSequenceComplete});
-				TweenLite.to(_rewardBanner, 0.5, {alpha:0});
-				removeSparkles();
+				if(data.highHand){
+					
+					_assets.playSound(String("Achieve2"), 0, 0, Hud.ST_SOUND_FX);
+					
+					TweenLite.to(_winningHandText, 0.5, {x:900, ease:Expo.easeIn});
+					
+					//text
+					TweenLite.to(_bestHand, 1, {delay:0.25, x:0, ease:Expo.easeOut});
+					TweenLite.to(_plusFiveThousand, 1, {delay:0.75, x:0, ease:Expo.easeOut, onComplete:removeBg});
+					
+				} else {
+					removeBg();
+				}
+				
 			}
+		}
+		
+		private function removeBg():void{
+			
+			TweenLite.to(_bestHand, 0.5, {alpha:0});
+			TweenLite.to(_plusFiveThousand, 0.5, {alpha:0});
+			TweenLite.to(_bg, 0.25, {alpha:0});
+			TweenLite.to(_winningHandText, 0.5, {x:900, ease:Expo.easeIn, onComplete:onSequenceComplete});
+			TweenLite.to(_rewardBanner, 0.5, {alpha:0});
+			removeSparkles();
 		}
 		
 		private function addSparkles():void{
@@ -316,6 +350,12 @@ package com.cardScramble.scenes.game
 			if(_winningHandText){
 				_winningHandText.x = -_winningHandText.width;
 			}
+			
+			_bestHand.x = -_bestHand.width;
+			_bestHand.alpha = 1;
+			_plusFiveThousand.x = -_plusFiveThousand.width;
+			_plusFiveThousand.alpha = 1;
+			
 			_rewardBanner.alpha = 1;
 			_rewardBanner.x = -_rewardBanner.width;
 			

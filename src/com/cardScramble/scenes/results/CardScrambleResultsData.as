@@ -47,6 +47,12 @@ package com.cardScramble.scenes.results
 		}
 		
 		override public function close():void{
+			
+			_numHandAchievedByType = [];
+			_handsAchieved.length = 0;
+			_handScores = [];
+			_totalHandsAcheived = 0;
+			_totalScore = 0;
 			_model.endScene();
 		}
 		

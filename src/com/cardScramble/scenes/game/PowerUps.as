@@ -1,6 +1,7 @@
 package com.cardScramble.scenes.game
 {
 	import com.abacus.assetManager.AssetManager;
+	import com.cardScramble.scenes.store.data.StoreItemVO;
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
 	
@@ -11,7 +12,6 @@ package com.cardScramble.scenes.game
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.filters.BlurFilter;
 	
 	public class PowerUps extends Sprite{
 		
@@ -22,6 +22,9 @@ package com.cardScramble.scenes.game
 		public static const SHUFFLE:String = "shuffleChip";
 		public static const HOLD3:String = "hold3Chip";
 		public static const SCORE2X:String = "score2xChip";
+		public static const SUPER_HAND:String = "superHandChip";
+		public static const WILD_CARD:String = "wildCardChip";
+		public static const ONE_COLOR:String = "oneColorChip";
 		
 		//global
 		private var _assets:AssetManager = AssetManager.getInstance();
@@ -60,57 +63,62 @@ package com.cardScramble.scenes.game
 			
 			//touch began
 			if(touchBegan){
-				var powerUpBegan:Image = e.target as Image;
+				var powerUpBegan:PowerUpChip = Image(e.target).parent as PowerUpChip;
 				TweenLite.to(powerUpBegan, 0.01, {scaleX:0.95, scaleY:0.95, ease:Expo.easeOut});
 			}
 			
 			//mouse over and mouse out
 			if(touchHover){
-				var powerUpHoverOver:Image = e.target as Image;
+				var powerUpHoverOver:PowerUpChip = Image(e.target).parent as PowerUpChip;
 				TweenLite.to(powerUpHoverOver, 0.25, {scaleX:1.05, scaleY:1.05, ease:Expo.easeOut});
 				
 			} else {
-				var powerUpHoverOut:Image = e.target as Image;
+				var powerUpHoverOut:PowerUpChip = Image(e.target).parent as PowerUpChip;
 				TweenLite.to(powerUpHoverOut, 0.25, {scaleX:1, scaleY:1, ease:Expo.easeOut});
 			}
 			
 			//ended
 			if(touchEnded){
-				var powerUpEnded:Image = e.target as Image;
+				var powerUpEnded:PowerUpChip = Image(e.target).parent as PowerUpChip;
 				TweenLite.to(powerUpEnded, 0.01, {scaleX:1.05, scaleY:1.05, ease:Expo.easeOut, onComplete:onTouchComplete, onCompleteParams:[powerUpEnded]});
 				dispatchEventWith(UPDATE, true, {type:_powerUpDict[powerUpEnded]});
 			}
 			
 		}
 		
-		private function onTouchComplete(powerUp:Image):void{
-			TweenLite.to(powerUp, 1, {x:250, ease:Expo.easeOut, onComplete:removePowerUp});
+		private function onTouchComplete(powerUp:PowerUpChip):void{
 			
-			function removePowerUp():void{
-				removeChild(powerUp);
-			}
+			powerUp.updateQuantity(powerUp.quantity-1);
+			
+			if(powerUp.quantity == 0){
+				
+				TweenLite.to(powerUp, 1, {x:250, ease:Expo.easeOut, onComplete:removePowerUp});
+				
+				function removePowerUp():void{
+					removeChild(powerUp);
+				}
+			} 
+
 		}
 		
 		
 		
 		//=============== PUBLIC METHODS ==================//
 		
-		public function add(type:String):void{
+		public function add(itemVO:StoreItemVO):void{
 			
-			var powerUpChip:Image = new Image(_assets.getTexture(type));
+			var powerUpChip:PowerUpChip = new PowerUpChip(itemVO.itemType);
 			
-			powerUpChip.pivotX = powerUpChip.pivotY = powerUpChip.width/2;
-			powerUpChip.filter = BlurFilter.createDropShadow(5, 0.785, 0x0, 0.75);
 			powerUpChip.y = _powerUpChipsContainer.height;
-			
 			if(_powerUpChipsContainer.numChildren > 0){
 				powerUpChip.y += 20;
 			}
 			
+			powerUpChip.updateQuantity(itemVO.quantity);
 			_powerUpChipsContainer.addChild(powerUpChip);
 			
 			//associate chip with event type
-			switch(type){
+			switch(itemVO.itemType){
 				
 				case "shuffleChip":
 					_powerUpDict[powerUpChip] = SHUFFLE;
@@ -121,9 +129,26 @@ package com.cardScramble.scenes.game
 				case "hold3Chip":
 					_powerUpDict[powerUpChip] = HOLD3;
 					break;
+				case "wildCardChip":
+					_powerUpDict[powerUpChip] = WILD_CARD;
+					break;
+				case "oneColorChip":
+					_powerUpDict[powerUpChip] = ONE_COLOR;
+					break;
+				case "superHandChip":
+					_powerUpDict[powerUpChip] = SUPER_HAND;
+					break;
 			}
 		}
 		
+		public function reset():void{
+			
+			_powerUpDict = null;
+			
+			while(_powerUpChipsContainer.numChildren > 0){
+				_powerUpChipsContainer.removeChildAt(0);
+			}
+		}
 		
 	}
 }
